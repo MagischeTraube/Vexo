@@ -1,6 +1,7 @@
 package io.github.vexo.utils.skyblock
 
 
+import io.github.vexo.Vexo.Companion.mc
 import net.minecraft.event.ClickEvent
 import net.minecraft.event.HoverEvent
 import net.minecraft.util.ChatComponentText
@@ -19,7 +20,6 @@ import net.minecraft.client.Minecraft
  * @param clientSide If `true`, the command is executed client-side; otherwise, server-side.
  */
 
-    val mc: Minecraft = Minecraft.getMinecraft()
 
 fun runOnMCThread(run: () -> Unit) {
     if (!mc.isCallingFromMinecraftThread) mc.addScheduledTask(run) else run()
