@@ -3,7 +3,7 @@ package io.github.vexo.features.dungeons
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
-val triggers = listOf(
+val RagAxeTriggers = listOf(
     Regex("[BOSS] Wither King: I no longer wish to fight, but I know that will not stop you."),
     Regex("[BOSS] Livid: I can now turn those Spirits into shadows of myself, identical to their creator."),
     Regex("[BOSS] Sadan: I am the bridge between this realm and the world below! You shall not pass!")
@@ -12,7 +12,7 @@ val triggers = listOf(
 class RagAxeNow {
     @SubscribeEvent
     fun onChat(event: ClientChatReceivedEvent) {
-        if (triggers.any { it.containsMatchIn(event.message.getFormattedText()) }) {
+        if (RagAxeTriggers.any { it.containsMatchIn(event.message.getFormattedText()) }) {
             System.out.println("RagAxe Now!")
         }
     }

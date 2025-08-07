@@ -7,6 +7,8 @@ import net.minecraft.command.ICommandSender
 import net.minecraft.util.ChatComponentText
 import java.util.*
 
+
+
 class SuckTrap : CommandBase() {
     override fun getCommandName(): String {
         return "sucktrap"
