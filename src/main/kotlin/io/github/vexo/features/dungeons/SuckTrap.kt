@@ -1,5 +1,6 @@
 package io.github.vexo.features.dungeons
 
+import io.github.vexo.utils.skyblock.partyMessage
 import net.minecraft.command.CommandBase
 import net.minecraft.command.CommandException
 import net.minecraft.command.ICommandSender
@@ -20,7 +21,7 @@ class SuckTrap : CommandBase() {
 
         val message = "test"
 
-        sender?.addChatMessage(ChatComponentText("§7[Print] §f$message"))
+        partyMessage("test")
     }
 
     override fun canCommandSenderUseCommand(sender: ICommandSender?): Boolean {
@@ -28,6 +29,6 @@ class SuckTrap : CommandBase() {
     }
 
     override fun getCommandAliases(): MutableList<String?> {
-        return Arrays.asList("dontcrashme")
+        return Arrays.asList()
     }
 }
