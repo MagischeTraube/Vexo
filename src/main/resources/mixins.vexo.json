@@ -1,7 +1,9 @@
 {
-  "package": "${basePackage}.mixin",
-  "plugin": "${basePackage}.init.AutoDiscoveryMixinPlugin",
+  "package": "io.github.vexo.mixin",
   "refmap": "mixins.${modid}.refmap.json",
   "minVersion": "0.7",
-  "compatibilityLevel": "JAVA_8"
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinModList"
+  ]
 }

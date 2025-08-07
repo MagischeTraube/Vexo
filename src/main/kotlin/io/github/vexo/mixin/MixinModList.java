@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.network.handshake.FMLHandshakeMessage;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
