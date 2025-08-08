@@ -4,7 +4,6 @@ import io.github.vexo.utils.skyblock.partyMessage
 import net.minecraft.command.CommandBase
 import net.minecraft.command.CommandException
 import net.minecraft.command.ICommandSender
-import net.minecraft.util.ChatComponentText
 import java.util.*
 
 
