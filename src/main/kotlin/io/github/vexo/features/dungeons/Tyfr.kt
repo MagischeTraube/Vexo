@@ -13,10 +13,10 @@ import java.util.*
 object tyfrData {
     var tyfr = false
     val TyfrTrigger = listOf(
-        Regex("<[^>]+>\\s*Score:.*:") // Trigger für das Dungeon-Ende
+        Regex("<[^>]+>\\s*Score:.*:")
     )
     var msgDelay = 0
-    var pendingTyfr = false // Merkt sich, ob wir noch "tyfr o/" senden müssen
+    var pendingTyfr = false
 }
 
 class Tyfr : CommandBase() {
@@ -31,10 +31,12 @@ class Tyfr : CommandBase() {
 
     @Throws(CommandException::class)
     override fun processCommand(sender: ICommandSender?, args: Array<String?>?) {
-        tyfrData.tyfr = true
-        tyfrData.msgDelay = 5 // 5 Ticks Delay
-        tyfrData.pendingTyfr = false
-        modMessage("TYFR activated! – waiting for the end of the run")
+        tyfrData.tyfr = !tyfrData.tyfr
+        if (tyfrData.tyfr) {
+            modMessage("TYFR activated! – waiting for the end of the run")
+        } else {
+            modMessage("TYFR deactivated!")
+        }
     }
 
     override fun canCommandSenderUseCommand(sender: ICommandSender?): Boolean {
@@ -52,21 +54,16 @@ class EndOfRun {
     fun onChat(event: ClientChatReceivedEvent) {
         if (tyfrData.TyfrTrigger.any { it.containsMatchIn(event.message.formattedText) } && tyfrData.tyfr) {
             sendCommand("p leave")
-
-            tyfrData.pendingTyfr = true
             tyfrData.msgDelay = 5
         }
     }
 
     @SubscribeEvent
     fun onServerTick(event: ServerTickEvent) {
-        if (!tyfrData.pendingTyfr) {
-            return
-        } else if (tyfrData.msgDelay > 0) {
-            tyfrData.msgDelay--
-        } else {
+        if (!tyfrData.tyfr) return
+        if (tyfrData.msgDelay > 0)  tyfrData.msgDelay--
+        else {
             sendCommand("ac tyfr o/")
-            tyfrData.pendingTyfr = false
             tyfrData.tyfr = false
         }
     }
