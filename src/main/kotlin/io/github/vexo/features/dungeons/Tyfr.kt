@@ -1,5 +1,6 @@
 package io.github.vexo.features.dungeons
 
+
 import io.github.vexo.utils.skyblock.modMessage
 import io.github.vexo.utils.skyblock.sendCommand
 import io.github.vexo.utils.skyblock.ServerTickEvent
@@ -16,7 +17,6 @@ object tyfrData {
         Regex("<[^>]+>\\s*Score:.*:")
     )
     var msgDelay = 0
-    var pendingTyfr = false
 }
 
 class Tyfr : CommandBase() {
@@ -49,7 +49,6 @@ class Tyfr : CommandBase() {
 }
 
 class EndOfRun {
-
     @SubscribeEvent
     fun onChat(event: ClientChatReceivedEvent) {
         if (tyfrData.TyfrTrigger.any { it.containsMatchIn(event.message.formattedText) } && tyfrData.tyfr) {
@@ -67,6 +66,4 @@ class EndOfRun {
             tyfrData.tyfr = false
         }
     }
-
-
 }
