@@ -13,7 +13,7 @@ object ChatCleaner : Module(
     category = "Chat"
 ){
     private val RandomSpam = registerSetting(BooleanSetting("Random Spam", true, "Schaltet das Feature ein/aus"))
-    private val RandomDungeonSpawn = registerSetting(BooleanSetting("ToggleFeature", false, "Schaltet das Feature ein/aus"))
+    private val RandomDungeonSpawn = registerSetting(BooleanSetting("Dungeon Spam", true, "Schaltet das Feature ein/aus"))
     @SubscribeEvent
     fun onChat(event: ChatPacketEvent) {
 
