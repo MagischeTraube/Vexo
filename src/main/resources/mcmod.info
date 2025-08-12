@@ -2,7 +2,7 @@
   {
     "modid": "${modid}",
     "name": "Vexo",
-    "description": "Vexo description!",
+    "description": "Dungeon and QOL Mod for Hypixel Skyblock 1.8.9",
     "version": "${version}",
     "mcversion": "${mcversion}",
     "url": "https://github.com/MagischeTraube/Vexo",
@@ -12,7 +12,7 @@
       "Lloyd"
     ],
     "credits": "",
-    "logoFile": "",
+    "logoFile": "vexo.png",
     "screenshots": [],
     "dependencies": []
   }
