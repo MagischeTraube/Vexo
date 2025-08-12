@@ -27,8 +27,6 @@ class Vexo {
     @Mod.EventHandler
     fun init(event: FMLInitializationEvent) {
         MinecraftForge.EVENT_BUS.register(HideMageSheep())
-        MinecraftForge.EVENT_BUS.register(RagAxeNow())
-
 
         listOf(
             EventTrigger, EndOfRun
@@ -47,7 +45,7 @@ class Vexo {
          * Features
          */
         val FEATURES = listOf(
-            Example
+            RagAxeNow, ChatCleaner, HideMageSheep
         )
         ModuleManager.register(FEATURES)
 
