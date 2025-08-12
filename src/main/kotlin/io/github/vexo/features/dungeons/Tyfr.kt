@@ -3,20 +3,21 @@ package io.github.vexo.features.dungeons
 
 import io.github.vexo.utils.skyblock.modMessage
 import io.github.vexo.utils.skyblock.sendCommand
-import io.github.vexo.utils.skyblock.ServerTickEvent
 import net.minecraft.command.CommandBase
 import net.minecraft.command.CommandException
 import net.minecraft.command.ICommandSender
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import net.minecraftforge.fml.common.gameevent.TickEvent
 import java.util.*
 
 object tyfrData {
     var tyfr = false
     val TyfrTrigger = listOf(
-        Regex("<[^>]+>\\s*Score:.*:")
+        Regex("<[^>]+>\\sScore:.+:")
     )
     var msgDelay = 0
+    var EndOfRun = false
 }
 
 class Tyfr : CommandBase() {
@@ -51,19 +52,23 @@ class Tyfr : CommandBase() {
 class EndOfRun {
     @SubscribeEvent
     fun onChat(event: ClientChatReceivedEvent) {
-        if (tyfrData.TyfrTrigger.any { it.containsMatchIn(event.message.formattedText) } && tyfrData.tyfr) {
+        if (event.message.getFormattedText().contains("Score") && tyfrData.tyfr) {
+            tyfrData.EndOfRun = true
             sendCommand("p leave")
             tyfrData.msgDelay = 5
         }
     }
 
     @SubscribeEvent
-    fun onServerTick(event: ServerTickEvent) {
-        if (!tyfrData.tyfr) return
-        if (tyfrData.msgDelay > 0)  tyfrData.msgDelay--
+    fun onServerTick(event: TickEvent.ServerTickEvent) {
+        if (!tyfrData.tyfr || !tyfrData.EndOfRun) return
+        if (tyfrData.msgDelay > 0) {
+            tyfrData.msgDelay--
+        }
         else {
-            sendCommand("ac tyfr o/")
             tyfrData.tyfr = false
+            tyfrData.EndOfRun = false
+            sendCommand("ac tyfr o/")
         }
     }
 }
