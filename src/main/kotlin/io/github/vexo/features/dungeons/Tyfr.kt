@@ -14,9 +14,10 @@ import java.util.*
 object tyfrData {
     var tyfr = false
     val TyfrTrigger = listOf(
-        Regex("<[^>]+>\\s*Score:.*:")
+        Regex("<[^>]+>\\sScore:.+:")
     )
     var msgDelay = 0
+    var EndOfRun = false
 }
 
 class Tyfr : CommandBase() {
@@ -51,16 +52,22 @@ class Tyfr : CommandBase() {
 class EndOfRun {
     @SubscribeEvent
     fun onChat(event: ClientChatReceivedEvent) {
-        if (tyfrData.TyfrTrigger.any { it.containsMatchIn(event.message.getFormattedText()) } && tyfrData.tyfr) {
-            tyfrData.msgDelay = 5
+        if (event.message.getFormattedText().contains("Score") && tyfrData.tyfr) {
+            tyfrData.EndOfRun = true
             sendCommand("p leave")
+            tyfrData.msgDelay = 5
         }
     }
 
     @SubscribeEvent
     fun onServerTick(event: TickEvent.ServerTickEvent) {
-        if (tyfrData.msgDelay > 0) tyfrData.msgDelay--
+        if (!tyfrData.tyfr || !tyfrData.EndOfRun) return
+        if (tyfrData.msgDelay > 0) {
+            tyfrData.msgDelay--
+        }
         else {
+            tyfrData.tyfr = false
+            tyfrData.EndOfRun = false
             sendCommand("ac tyfr o/")
         }
     }
