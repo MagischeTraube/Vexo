@@ -26,7 +26,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 class Vexo {
     @Mod.EventHandler
     fun init(event: FMLInitializationEvent) {
-        MinecraftForge.EVENT_BUS.register(HideMageSheep())
 
         listOf(
             EventTrigger, EndOfRun
