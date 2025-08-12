@@ -1,6 +1,7 @@
 package io.github.vexo.features.dungeons
 
 
+import io.github.vexo.events.ServerTickEvent
 import io.github.vexo.utils.skyblock.modMessage
 import io.github.vexo.utils.skyblock.sendCommand
 import net.minecraft.command.CommandBase
@@ -8,7 +9,6 @@ import net.minecraft.command.CommandException
 import net.minecraft.command.ICommandSender
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.common.gameevent.TickEvent
 import java.util.*
 
 object tyfrData {
@@ -20,7 +20,7 @@ object tyfrData {
     var EndOfRun = false
 }
 
-class Tyfr : CommandBase() {
+object Tyfr : CommandBase() {
 
     override fun getCommandName(): String {
         return "tyfr"
@@ -45,11 +45,11 @@ class Tyfr : CommandBase() {
     }
 
     override fun getCommandAliases(): MutableList<String?> {
-        return Arrays.asList()
+        return Arrays.asList("TYFR")
     }
 }
 
-class EndOfRun {
+object EndOfRun {
     @SubscribeEvent
     fun onChat(event: ClientChatReceivedEvent) {
         if (event.message.getFormattedText().contains("Score") && tyfrData.tyfr) {
@@ -60,7 +60,7 @@ class EndOfRun {
     }
 
     @SubscribeEvent
-    fun onServerTick(event: TickEvent.ServerTickEvent) {
+    fun onServerTick(event: ServerTickEvent) {
         if (!tyfrData.tyfr || !tyfrData.EndOfRun) return
         if (tyfrData.msgDelay > 0) {
             tyfrData.msgDelay--

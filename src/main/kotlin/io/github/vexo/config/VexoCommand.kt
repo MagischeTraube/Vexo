@@ -7,7 +7,7 @@ import net.minecraft.command.ICommandSender
 import java.util.*
 
 
-class VexoCommand : CommandBase() {
+object VexoCommand : CommandBase() {
 
     override fun getCommandName(): String {
         return "vexo"

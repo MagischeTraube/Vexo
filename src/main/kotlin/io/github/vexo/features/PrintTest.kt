@@ -1,12 +1,13 @@
 package io.github.vexo.features
 
+import io.github.vexo.utils.skyblock.modMessage
 import net.minecraft.command.CommandBase
 import net.minecraft.command.ICommandSender
 import net.minecraft.util.ChatComponentText
 import net.minecraft.command.CommandException
 import java.util.*
 
-class PrintTest : CommandBase() {
+object PrintTest : CommandBase() {
     override fun getCommandName(): String {
         return "printtest"
     }
@@ -18,12 +19,11 @@ class PrintTest : CommandBase() {
     @Throws(CommandException::class)
     override fun processCommand(sender: ICommandSender, args: Array<String>) {
         val message = "test"
-
-        sender.addChatMessage(ChatComponentText("§7[Print] §f$message"))
+        modMessage(message)
     }
 
     override fun canCommandSenderUseCommand(sender: ICommandSender): Boolean {
-        return true // Erlaubt allen Spielern, den Befehl zu nutzen
+        return true
     }
 
     override fun getCommandAliases(): MutableList<String?> {

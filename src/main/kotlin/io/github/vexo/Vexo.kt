@@ -6,10 +6,11 @@ import io.github.vexo.config.VexoCommand
 import io.github.vexo.events.EventTrigger
 import io.github.vexo.features.Example
 import io.github.vexo.features.PrintTest
-import io.github.vexo.features.chat.ChatCleaner
+import io.github.vexo.features.chat.*
 import io.github.vexo.features.dungeons.EndOfRun
 import io.github.vexo.features.dungeons.HideMageSheep
 import io.github.vexo.features.dungeons.RagAxeNow
+import io.github.vexo.features.dungeons.SuckTrap
 import io.github.vexo.features.dungeons.Tyfr
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
@@ -25,23 +26,33 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 class Vexo {
     @Mod.EventHandler
     fun init(event: FMLInitializationEvent) {
-
-        listOf(EventTrigger).forEach { MinecraftForge.EVENT_BUS.register(it) }
-        MinecraftForge.EVENT_BUS.register(MyEventHandlerClass())
         MinecraftForge.EVENT_BUS.register(HideMageSheep())
         MinecraftForge.EVENT_BUS.register(RagAxeNow())
-        MinecraftForge.EVENT_BUS.register(EndOfRun())
 
-        ClientCommandHandler.instance.registerCommand(PrintTest())
-        ClientCommandHandler.instance.registerCommand(Tyfr())
-        ClientCommandHandler.instance.registerCommand(VexoCommand())
+
+        listOf(
+            EventTrigger, EndOfRun
+        ).forEach { MinecraftForge.EVENT_BUS.register(it) }
+
+
+        /**
+         * Commands
+        */
+        listOf(
+            Tyfr, VexoCommand, PrintTest, SuckTrap
+        ).forEach { ClientCommandHandler.instance.registerCommand(it) }
+
+
+        /**
+         * Features
+         */
+        val FEATURES = listOf(
+            Example
+        )
+        ModuleManager.register(FEATURES)
+
         MinecraftForge.EVENT_BUS.register(this)
 
-        val FEATURES = listOf(
-            Example, ChatCleaner
-        )
-
-        ModuleManager.register(FEATURES)
         ConfigManager.load()
     }
 

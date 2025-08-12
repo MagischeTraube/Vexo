@@ -8,7 +8,7 @@ import java.util.*
 
 
 
-class SuckTrap : CommandBase() {
+object SuckTrap : CommandBase() {
     override fun getCommandName(): String {
         return "sucktrap"
     }
@@ -19,9 +19,6 @@ class SuckTrap : CommandBase() {
 
     @Throws(CommandException::class)
     override fun processCommand(sender: ICommandSender?, args: Array<String?>?) {
-
-        val message = "test"
-
         partyMessage("test")
     }
 
