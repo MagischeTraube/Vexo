@@ -2,11 +2,8 @@ package io.github.vexo.features.chat
 
 
 import io.github.vexo.config.BooleanSetting
-import io.github.vexo.config.DropdownSetting
-import io.github.vexo.config.KeybindSetting
 import io.github.vexo.config.Module
 import io.github.vexo.events.ChatPacketEvent
-import io.github.vexo.events.PacketEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
 
