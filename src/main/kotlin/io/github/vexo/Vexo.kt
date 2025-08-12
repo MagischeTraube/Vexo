@@ -3,10 +3,8 @@ package io.github.vexo
 import io.github.vexo.config.ConfigManager
 import io.github.vexo.config.ModuleManager
 import io.github.vexo.config.VexoCommand
+import io.github.vexo.events.EventTrigger
 import io.github.vexo.features.Example
-import io.github.vexo.features.Example2
-import io.github.vexo.features.Example3
-import io.github.vexo.features.Example4
 import io.github.vexo.features.PrintTest
 import io.github.vexo.features.chat.ChatCleaner
 import io.github.vexo.features.dungeons.EndOfRun
@@ -23,14 +21,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
-
 @Mod(modid = Vexo.MOD_ID, version = Vexo.VERSION, useMetadata = true)
 class Vexo {
     @Mod.EventHandler
     fun init(event: FMLInitializationEvent) {
+
+        listOf(EventTrigger).forEach { MinecraftForge.EVENT_BUS.register(it) }
         MinecraftForge.EVENT_BUS.register(MyEventHandlerClass())
         MinecraftForge.EVENT_BUS.register(HideMageSheep())
-        MinecraftForge.EVENT_BUS.register(ChatCleaner())
         MinecraftForge.EVENT_BUS.register(RagAxeNow())
         MinecraftForge.EVENT_BUS.register(EndOfRun())
 
@@ -40,7 +38,7 @@ class Vexo {
         MinecraftForge.EVENT_BUS.register(this)
 
         val FEATURES = listOf(
-            Example, Example2, Example3, Example4
+            Example, ChatCleaner
         )
 
         ModuleManager.register(FEATURES)

@@ -12,8 +12,6 @@ object Example : Module(
     category = "Test"
 ) {
     private val toggleSetting = registerSetting(BooleanSetting("ToggleFeature", false, "Schaltet das Feature ein/aus"))
-    private val toggleSetting2 = registerSetting(BooleanSetting("ToggleFeature", false, "Schaltet das Feature ein/aus"))
-    private val toggleSetting3 = registerSetting(BooleanSetting("ToggleFeature", false, "Schaltet das Feature ein/aus"))
 
     private val modeSetting = registerSetting(DropdownSetting("Mode", "Easy", listOf("Easy", "Medium", "Hard"), "Wähle den Modus"))
 
