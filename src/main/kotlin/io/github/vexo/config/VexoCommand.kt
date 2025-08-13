@@ -14,12 +14,20 @@ object VexoCommand : CommandBase() {
     }
 
     override fun getCommandUsage(sender: ICommandSender?): String {
-        return ""
+        return "/vexo [update]"
     }
 
     @Throws(CommandException::class)
     override fun processCommand(sender: ICommandSender?, args: Array<String?>?) {
-        Vexo.screenToOpenNextTick = VexoGui()
+        if (args == null || args.isEmpty() || args[0].isNullOrBlank()) {
+            Vexo.screenToOpenNextTick = VexoGui()
+
+        } else if (args[0].equals("update", ignoreCase = true)) {
+            vexoUpdater(true)
+
+        } else {
+            Vexo.screenToOpenNextTick = VexoGui()
+        }
     }
 
     override fun canCommandSenderUseCommand(sender: ICommandSender?): Boolean {

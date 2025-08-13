@@ -55,6 +55,17 @@ class VexoGui : GuiScreen() {
     private val pickerX = 100
     private val pickerY = 100
 
+    private val buttonWidth = categoryWidth - 10
+    private val buttonHeight = 18
+    private val buttonSpacing = 4
+    private val bottomMargin = 10
+
+    private val discordButtonX get() = guiLeft + 5
+    private val updateButtonX get() = guiLeft + 5
+    private val discordButtonY get() = guiTop + guiHeight - (buttonHeight * 2 + buttonSpacing + bottomMargin)
+    private val updateButtonY get() = guiTop + guiHeight - (buttonHeight + bottomMargin)
+
+
     fun hsvToRgb(h: Float, s: Float, v: Float): Color {
         return Color.getHSBColor(h, s, v)
     }
@@ -151,7 +162,18 @@ class VexoGui : GuiScreen() {
             drawCircle(markerX, markerY, 5, Color.WHITE.rgb)
         }
 
+        drawButton(discordButtonX, discordButtonY, buttonWidth, buttonHeight, "Join Discord", mouseX, mouseY)
+        drawButton(updateButtonX, updateButtonY, buttonWidth, buttonHeight, "Update", mouseX, mouseY)
+
         super.drawScreen(mouseX, mouseY, partialTicks)
+    }
+
+    private fun drawButton(x: Int, y: Int, width: Int, height: Int, text: String, mouseX: Int, mouseY: Int) {
+        val hovered = mouseX in x..(x + width) && mouseY in y..(y + height)
+        val bgColor = if (hovered) Color(72, 102, 219) else Color(30, 144, 255) // helleres Blau bei Hover
+        drawRoundedRect(x, y, x + width, y + height, 6, bgColor.rgb)
+        val textColor = Color.WHITE.rgb
+        mc.fontRendererObj.drawStringWithShadow(text, x + width / 2f - mc.fontRendererObj.getStringWidth(text) / 2f, y + (height - 8) / 2f, textColor)
     }
 
     private fun drawCategories(mouseX: Int, mouseY: Int) {
@@ -416,6 +438,15 @@ class VexoGui : GuiScreen() {
     }
 
     override fun mouseClicked(mouseX: Int, mouseY: Int, mouseButton: Int) {
+        if (mouseButton == 0) { // linke Maustaste
+            if (mouseX in discordButtonX..(discordButtonX + buttonWidth) && mouseY in discordButtonY..(discordButtonY + buttonHeight)) {
+                java.awt.Desktop.getDesktop().browse(java.net.URI("https://discord.gg/wfW3aEEpVA"))
+            }
+
+            if (mouseX in updateButtonX..(updateButtonX + buttonWidth) && mouseY in updateButtonY..(updateButtonY + buttonHeight)) {
+                vexoUpdater(true)
+            }
+        }
 
         // 1.1 Dropdown-Options
         dropdownOpen?.let { dd ->

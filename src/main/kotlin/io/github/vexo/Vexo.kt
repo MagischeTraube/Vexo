@@ -1,17 +1,10 @@
 package io.github.vexo
 
-import io.github.vexo.config.ConfigManager
-import io.github.vexo.config.ModuleManager
-import io.github.vexo.config.VexoCommand
+import io.github.vexo.config.*
 import io.github.vexo.events.EventTrigger
-import io.github.vexo.features.Example
-import io.github.vexo.features.PrintTest
+import io.github.vexo.features.*
 import io.github.vexo.features.chat.*
-import io.github.vexo.features.dungeons.EndOfRun
-import io.github.vexo.features.dungeons.HideMageSheep
-import io.github.vexo.features.dungeons.RagAxeNow
-import io.github.vexo.features.dungeons.SuckTrap
-import io.github.vexo.features.dungeons.Tyfr
+import io.github.vexo.features.dungeons.*
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
 import net.minecraftforge.client.ClientCommandHandler
@@ -28,7 +21,7 @@ class Vexo {
     fun init(event: FMLInitializationEvent) {
 
         listOf(
-            EventTrigger, EndOfRun
+            EventTrigger, EndOfRun, checkForUpdateOnStartup
         ).forEach { MinecraftForge.EVENT_BUS.register(it) }
 
 
@@ -65,6 +58,7 @@ class Vexo {
     companion object {
         const val MOD_ID = "vexo"
         const val VERSION = "1.0.0"
+        const val VERSION_NUMBER = 1
 
         @JvmStatic
         val mc : Minecraft = Minecraft.getMinecraft()
