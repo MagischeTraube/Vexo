@@ -42,7 +42,7 @@ fun checkForUpdate(): Boolean {
         val potentialUpdate = newVersion.get()
         if (potentialUpdate.isUpdateAvailable) {
             modMessage("§aNew Version found: ${potentialUpdate.update.versionName}")
-            //potentialUpdate.launchUpdate()
+            potentialUpdate.launchUpdate()
             true
         } else {
             false

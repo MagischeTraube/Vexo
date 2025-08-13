@@ -170,7 +170,7 @@ class VexoGui : GuiScreen() {
 
     private fun drawButton(x: Int, y: Int, width: Int, height: Int, text: String, mouseX: Int, mouseY: Int) {
         val hovered = mouseX in x..(x + width) && mouseY in y..(y + height)
-        val bgColor = if (hovered) Color(72, 102, 219) else Color(30, 144, 255) // helleres Blau bei Hover
+        val bgColor = if (hovered) Color(72, 102, 219) else Color(30, 144, 255)
         drawRoundedRect(x, y, x + width, y + height, 6, bgColor.rgb)
         val textColor = Color.WHITE.rgb
         mc.fontRendererObj.drawStringWithShadow(text, x + width / 2f - mc.fontRendererObj.getStringWidth(text) / 2f, y + (height - 8) / 2f, textColor)
@@ -438,7 +438,7 @@ class VexoGui : GuiScreen() {
     }
 
     override fun mouseClicked(mouseX: Int, mouseY: Int, mouseButton: Int) {
-        if (mouseButton == 0) { // linke Maustaste
+        if (mouseButton == 0) {
             if (mouseX in discordButtonX..(discordButtonX + buttonWidth) && mouseY in discordButtonY..(discordButtonY + buttonHeight)) {
                 java.awt.Desktop.getDesktop().browse(java.net.URI("https://discord.gg/wfW3aEEpVA"))
             }
