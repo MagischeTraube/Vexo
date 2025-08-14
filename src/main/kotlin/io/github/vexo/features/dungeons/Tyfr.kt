@@ -14,7 +14,8 @@ import java.util.*
 object tyfrData {
     var tyfr = false
     val TyfrTrigger = listOf(
-        Regex("<[^>]+>\\sScore:.+:")
+        Regex("Score:"),
+        Regex("Tokens Earned:")
     )
     var msgDelay = 0
     var EndOfRun = false
