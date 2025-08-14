@@ -19,7 +19,7 @@ object SuckTrap : CommandBase() {
 
     @Throws(CommandException::class)
     override fun processCommand(sender: ICommandSender?, args: Array<String?>?) {
-        partyMessage("test")
+        partyMessage("please learn how to do Trap properly... https://youtu.be/JUnrH_AJ5Nc?si=8FVgBTAO7EvG7Xro")
     }
 
     override fun canCommandSenderUseCommand(sender: ICommandSender?): Boolean {
