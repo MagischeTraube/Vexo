@@ -38,7 +38,7 @@ class Vexo {
          * Features
          */
         val FEATURES = listOf(
-            RagAxeNow, ChatCleaner, HideMageSheep,
+            RagAxeNow, ChatCleaner, HideMageSheep, AnnounceClass
         )
         ModuleManager.register(FEATURES)
 
