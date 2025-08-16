@@ -1,45 +1,75 @@
 package io.github.vexo.utils.dungeon
 
-import io.github.vexo.events.ServerTickEvent
-import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.fml.common.Mod
-import net.minecraftforge.fml.common.event.FMLInitializationEvent
+import io.github.vexo.events.PacketEvent
+import io.github.vexo.utils.skyblock.modMessage
+import net.minecraft.network.play.server.S38PacketPlayerListItem
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraft.client.Minecraft
-import net.minecraft.scoreboard.ScorePlayerTeam
-import net.minecraft.scoreboard.Scoreboard
-import net.minecraft.util.ChatComponentText
 
-@Mod(modid = "scoreboarddebug", name = "Scoreboard Debug", version = "1.0")
-class ScoreboardDebug {
+val FORMATTING_CODE_PATTERN = Regex("§[0-9a-fk-or]", RegexOption.IGNORE_CASE)
 
-    private var ticks = 0
+inline val String?.noControlCodes: String
+    get() = this?.replace(FORMATTING_CODE_PATTERN, "") ?: ""
 
-    @Mod.EventHandler
-    fun init(event: FMLInitializationEvent) {
-        MinecraftForge.EVENT_BUS.register(this)
-    }
+object DungeonTabList {
+    var tabListEntries: List<String> = emptyList()
 
     @SubscribeEvent
-    fun onServerTick(event: ServerTickEvent) {
-        val mc = Minecraft.getMinecraft()
-        ticks++
-        if (mc.theWorld != null && mc.thePlayer != null && ticks >= 20) { // 1 Sekunde
-            ticks = 0
-            printScoreboard(mc.theWorld.scoreboard)
+    fun onPacket(event: PacketEvent.Receive) {
+        when (event.packet) {
+            is S38PacketPlayerListItem -> {
+                if (event.packet.action !in listOf(
+                        S38PacketPlayerListItem.Action.UPDATE_DISPLAY_NAME,
+                        S38PacketPlayerListItem.Action.ADD_PLAYER
+                    )) return
+
+                tabListEntries = event.packet.entries
+                    ?.mapNotNull { it.displayName?.unformattedText?.noControlCodes }
+                    ?: emptyList()
+                tankIGN()
+                archerIGN()
+                bersIGN()
+                mageIGN()
+                healIGN()
+            }
         }
     }
+}
+fun tankIGN() {
+    val tankPattern = Regex("(?<=\\s)\\w+(?=\\s.*\\(Tank\\s)", RegexOption.IGNORE_CASE)
 
-    private fun printScoreboard(scoreboard: Scoreboard) {
-        val mc = Minecraft.getMinecraft()
-        val objective = scoreboard.getObjectiveInDisplaySlot(1) ?: return // Sidebar
-        val scores = scoreboard.getSortedScores(objective)
+    val tankIGN = DungeonTabList.tabListEntries.firstNotNullOfOrNull { entry ->
+        tankPattern.find(entry)?.value
+    }
+}
 
-        mc.thePlayer.addChatMessage(ChatComponentText("§6--- Scoreboard ---"))
-        for (score in scores) {
-            val team = scoreboard.getPlayersTeam(score.playerName)
-            val line = ScorePlayerTeam.formatPlayerName(team, score.playerName)
-            mc.thePlayer.addChatMessage(ChatComponentText("§7$line: §a${score.scorePoints}"))
-        }
+fun archerIGN() {
+    val archerPattern = Regex("(?<=\\s)\\w+(?=\\s.*\\(Archer\\s)", RegexOption.IGNORE_CASE)
+
+    val archerIGN = DungeonTabList.tabListEntries.firstNotNullOfOrNull { entry ->
+        archerPattern.find(entry)?.value
+    }
+}
+
+fun bersIGN() {
+    val berserkPattern = Regex("(?<=\\s)\\w+(?=\\s.*\\(Berserk\\s)", RegexOption.IGNORE_CASE)
+
+    val berserkIGN = DungeonTabList.tabListEntries.firstNotNullOfOrNull { entry ->
+        berserkPattern.find(entry)?.value
+    }
+}
+
+fun mageIGN() {
+    val magePattern = Regex("(?<=\\s)\\w+(?=\\s.*\\(Mage\\s)", RegexOption.IGNORE_CASE)
+
+    val mageIGN = DungeonTabList.tabListEntries.firstNotNullOfOrNull { entry ->
+        magePattern.find(entry)?.value
+    }
+}
+
+fun healIGN() {
+    val healerPattern = Regex("(?<=\\s)\\w+(?=\\s.*\\(Healer\\s)", RegexOption.IGNORE_CASE)
+
+    val healerIGN = DungeonTabList.tabListEntries.firstNotNullOfOrNull { entry ->
+        healerPattern.find(entry)?.value
     }
 }

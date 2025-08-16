@@ -1,5 +1,6 @@
 package io.github.vexo
 
+import io.github.vexo.utils.dungeon.*
 import io.github.vexo.config.*
 import io.github.vexo.events.EventTrigger
 import io.github.vexo.features.*
@@ -21,7 +22,7 @@ class Vexo {
     fun init(event: FMLInitializationEvent) {
 
         listOf(
-            EventTrigger, EndOfRun, checkForUpdateOnStartup
+            EventTrigger, EndOfRun, checkForUpdateOnStartup, DungeonTabList
         ).forEach { MinecraftForge.EVENT_BUS.register(it) }
 
 
@@ -37,7 +38,7 @@ class Vexo {
          * Features
          */
         val FEATURES = listOf(
-            RagAxeNow, ChatCleaner, HideMageSheep
+            RagAxeNow, ChatCleaner, HideMageSheep,
         )
         ModuleManager.register(FEATURES)
 
