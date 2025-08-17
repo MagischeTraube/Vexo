@@ -6,6 +6,7 @@ import io.github.vexo.events.EventTrigger
 import io.github.vexo.features.*
 import io.github.vexo.features.chat.*
 import io.github.vexo.features.dungeons.*
+import io.github.vexo.utils.skyblock.PriceUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
 import net.minecraftforge.client.ClientCommandHandler
@@ -22,7 +23,7 @@ class Vexo {
     fun init(event: FMLInitializationEvent) {
 
         listOf(
-            EventTrigger, EndOfRun, checkForUpdateOnStartup, DungeonTabList
+            EventTrigger, EndOfRun, checkForUpdateOnStartup, DungeonTabList, PriceUtils
         ).forEach { MinecraftForge.EVENT_BUS.register(it) }
 
 
@@ -38,7 +39,7 @@ class Vexo {
          * Features
          */
         val FEATURES = listOf(
-            RagAxeNow, ChatCleaner, HideMageSheep, AnnounceClass
+            RagAxeNow, ChatCleaner, HideMageSheep, AnnounceClass, ProfitTracker
         )
         ModuleManager.register(FEATURES)
 

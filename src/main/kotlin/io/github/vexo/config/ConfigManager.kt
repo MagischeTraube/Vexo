@@ -2,6 +2,7 @@ package io.github.vexo.config
 
 import java.io.File
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import java.awt.Color
 
@@ -34,7 +35,6 @@ object ConfigManager {
             ModuleManager.getModules().find { it.name == cfg.name }?.apply {
                 setEnabled(cfg.enabled)
                 cfg.settings.forEach { (key, value) ->
-                    if (value == null) return@forEach
                     settings.find { it.name == key }?.let { setting ->
                         when (setting) {
                             is ColorSetting -> {
@@ -67,6 +67,6 @@ object ConfigManager {
             ModuleConfig(mod.name, mod.enabled, settingsMap)
         }
         configFile.parentFile.mkdirs()
-        configFile.writeText(gson.toJson(cfgList))
+        configFile.writeText(GsonBuilder().setPrettyPrinting().create().toJson(cfgList))
     }
 }
