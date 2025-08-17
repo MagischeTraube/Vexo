@@ -57,7 +57,7 @@ fun getSlotPosition(gui: GuiContainer, slotIndex: Int): Point? {
 fun highlightSlot(gui: GuiContainer, slotIndex: Int, color: Color, aboveItem: Boolean = false) {
     val pos = getSlotPosition(gui, slotIndex) ?: return
 
-    val z = if (aboveItem) 350f else 200f
+    val z = if (aboveItem) 290f else 200f
 
     GlStateManager.pushMatrix()
 
@@ -71,7 +71,7 @@ fun highlightSlot(gui: GuiContainer, slotIndex: Int, color: Color, aboveItem: Bo
 fun recolorSlot(gui: GuiContainer, slotIndex: Int, color: Color, aboveItem: Boolean = false) {
     val pos = getSlotPosition(gui, slotIndex) ?: return
 
-    val z = if (aboveItem) 300f else 150f
+    val z = if (aboveItem) 280f else 150f
 
     GlStateManager.pushMatrix()
 
@@ -96,7 +96,7 @@ fun writeAboveSlot(gui: GuiContainer, slotIndex: Int, text: String, color: Color
     if ((textX + textWidth + 3) > (guiPos.x + xySize.x)) textX = guiPos.x + xySize.x - textWidth + 5
 
     GlStateManager.pushMatrix()
-    GlStateManager.translate(0.0, 0.0, 400.0)
+    GlStateManager.translate(0.0, 0.0, 295.0)
 
     font.drawString(text, textX, textY, color.rgb)
 
@@ -117,7 +117,7 @@ fun writeBelowSlot(gui: GuiContainer, slotIndex: Int, text: String, color: Color
     if ((textX + textWidth + 3) > (guiPos.x + xySize.x)) textX = guiPos.x + xySize.x - textWidth + 5
 
     GlStateManager.pushMatrix()
-    GlStateManager.translate(0.0, 0.0, 400.0)
+    GlStateManager.translate(0.0, 0.0, 295.0)
 
     font.drawString(text, textX, textY, color.rgb)
 
