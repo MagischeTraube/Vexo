@@ -5,6 +5,7 @@ import io.github.vexo.config.*
 import io.github.vexo.events.EventTrigger
 import io.github.vexo.features.*
 import io.github.vexo.features.QOL.AutoRejoin
+import io.github.vexo.features.QOL.MuteWalkingSounds
 import io.github.vexo.features.chat.*
 import io.github.vexo.features.dungeons.*
 import io.github.vexo.utils.skyblock.PriceUtils
@@ -40,7 +41,7 @@ class Vexo {
          * Features
          */
         val FEATURES = listOf(
-            RagAxeNow, ChatCleaner, HideMageSheep, AnnounceClass, ProfitTracker, AutoRejoin
+            RagAxeNow, ChatCleaner, HideMageSheep, AnnounceClass, ProfitTracker, AutoRejoin, MuteWalkingSounds
         )
         ModuleManager.register(FEATURES)
 
