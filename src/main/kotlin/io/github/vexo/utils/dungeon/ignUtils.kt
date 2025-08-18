@@ -40,7 +40,6 @@ object DungeonTabList {
             if (ign != null) { // Nur aktualisieren, wenn ein Spieler mit der Rolle gefunden wird
                 lastKnownRoles[role] = ign
             }
-            modMessage("$role: ${lastKnownRoles[role] ?: "none"}")
         }
     }
 
@@ -54,15 +53,12 @@ object DungeonTabList {
     }
 }
 
-fun myIGN(): String? {
-    val myName = Minecraft.getMinecraft().thePlayer.name
-    return DungeonTabList.tabListEntries.firstOrNull { entry ->
-        entry.noControlCodes.equals(myName, ignoreCase = true)
-    }
+fun myIGN(): String {
+    return Minecraft.getMinecraft().thePlayer.name
 }
 
 fun ownClass(): String? {
-    val myName = myIGN() ?: return null
+    val myName = myIGN()
 
     listOf("Tank", "Archer", "Berserk", "Mage", "Healer").forEach { role ->
         if (DungeonTabList.findIGNForRole(role)?.equals(myName, ignoreCase = true) == true) {

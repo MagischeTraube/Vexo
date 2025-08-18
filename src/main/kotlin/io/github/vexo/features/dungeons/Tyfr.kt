@@ -53,7 +53,6 @@ object Tyfr : CommandBase() {
 object EndOfRun {
     @SubscribeEvent
     fun onChat(event: ChatPacketEvent) {
-        // (event.message.getFormattedText() && tyfrData.tyfr)
         if (tyfrData.tyfr && tyfrData.TyfrTrigger.any { it.containsMatchIn(event.message) }){
             tyfrData.EndOfRun = true
             sendCommand("p leave")
