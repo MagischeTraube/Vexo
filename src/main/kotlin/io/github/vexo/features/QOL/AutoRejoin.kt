@@ -23,26 +23,16 @@ category = "QOL"
             partyMessage("I'm in Skyblock now")
             return
         } else if (dtkickMessages.any { it.containsMatchIn(event.message)} && !rejoining) {
-            rejoining = true
-            partyMessage("Kicked, trying to rejoining in 65 Seconds",)
-            modMessage("65 Seconds until rejoin")
-            Thread.sleep(30000)
-            modMessage("30 Seconds until rejoin")
-            Thread.sleep(35000)
-            modMessage("Rejoining now")
-            sendCommand("play skyblock", false)
+            Thread {
+                rejoining = true
+                partyMessage("Kicked, trying to rejoining in 65 Seconds",)
+                modMessage("65 Seconds until rejoin")
+                Thread.sleep(30000)
+                modMessage("30 Seconds until rejoin")
+                Thread.sleep(35000)
+                modMessage("Rejoining now")
+                sendCommand("play skyblock", false)
+            }.start()
         }
     }
 }
-
-
-/*
-
-
-registerWhen(register("Chat", () => {
-    if(!rejoining) return;
-    else {
-        ChatLib.command(`pc I'm in Skyblock now`, true);
-        rejoining = false;
-    }
-}).setCriteria("Welcome to Hypixel SkyBlock!"), () => config.rejoin)*/
