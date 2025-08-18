@@ -21,6 +21,4 @@ open class PacketEvent(val packet: Packet<*>) : Event() {
     class Send(packet: Packet<*>) : PacketEvent(packet)
 }
 
-class PriceDataUpdateEvent : Event() {
-    companion object
-}
+class PriceDataUpdateEvent : Event()
