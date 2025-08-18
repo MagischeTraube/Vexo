@@ -3,7 +3,9 @@ package io.github.vexo.utils.skyblock
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
+import io.github.vexo.events.PriceDataUpdateEvent
 import io.github.vexo.events.ServerTickEvent
+import io.github.vexo.events.postAndCatch
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import java.io.File
 import java.net.URL
@@ -75,6 +77,7 @@ object PriceUtils {
 
                 saveCachedPriceData()
 
+                PriceDataUpdateEvent().postAndCatch()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

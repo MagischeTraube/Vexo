@@ -20,3 +20,7 @@ open class PacketEvent(val packet: Packet<*>) : Event() {
     @Cancelable
     class Send(packet: Packet<*>) : PacketEvent(packet)
 }
+
+class PriceDataUpdateEvent : Event() {
+    companion object
+}

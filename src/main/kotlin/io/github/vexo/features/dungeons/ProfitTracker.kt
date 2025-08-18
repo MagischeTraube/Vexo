@@ -4,6 +4,7 @@ import io.github.vexo.Vexo.Companion.mc
 import io.github.vexo.config.BooleanSetting
 import io.github.vexo.config.ColorSetting
 import io.github.vexo.config.Module
+import io.github.vexo.events.PriceDataUpdateEvent
 import io.github.vexo.utils.skyblock.*
 import io.github.vexo.utils.skyblock.PriceUtils.getPrice
 import net.minecraft.client.gui.inventory.GuiContainer
@@ -34,17 +35,67 @@ object ProfitTracker : Module(
     private val customGui = registerSetting(BooleanSetting("Change Gui Color", true))
     private val customGuiColor = registerSetting(ColorSetting("Gui Color", Color(79, 79, 79)))
 
+    private var lastContentHash: Int? = null
+    private var cachedCroesusChests: List<Pair<Int, Int>> = emptyList()
+    private var cachedChestProfit: Pair<Int, Int>? = null
+
+    private var forceRecalc = false
 
     @SubscribeEvent
     fun onGuiRender(event: GuiScreenEvent.DrawScreenEvent.Pre) {
         val gui = mc.currentScreen as? GuiContainer ?: return
+        val guiContentHash = getGuiContentHash(gui)
+
         when (val title = gui.getGuiTitle() ?: return) {
             CroesusMenuGuiTitle -> CroesusMenuHighlight(gui)
+
             else -> when {
-                CroesusChestsGuiTitle.any { title.contains(it) } -> CroesusChestsProfitHighlight(gui)
-                DungeonChestsGuiTitle.any { title.contains(it) } -> ChestProfitHighlight(gui)
+                CroesusChestsGuiTitle.any { title.contains(it) } -> {
+                    if (forceRecalc || lastContentHash != guiContentHash || cachedCroesusChests.isEmpty()) {
+                        cachedCroesusChests = calculateCroesusChestsProfits(gui)
+                        lastContentHash = guiContentHash
+                        forceRecalc = false
+                    }
+                    drawCroesusChests(gui, cachedCroesusChests)
+                }
+
+                DungeonChestsGuiTitle.any { title.contains(it) } -> {
+                    if (forceRecalc || lastContentHash != guiContentHash || cachedChestProfit == null) {
+                        cachedChestProfit = calculateChestProfitForGui(gui)
+                        lastContentHash = guiContentHash
+                        forceRecalc = false
+                    }
+                    cachedChestProfit?.let { (slot, profit) ->
+                        drawChestProfit(gui, slot, profit)
+                    }
+                }
             }
         }
+    }
+
+    @SubscribeEvent
+    fun onGuiClosed(event: GuiScreenEvent.InitGuiEvent.Post) {
+        if (event.gui == null) {
+            resetCache()
+        }
+    }
+
+    @SubscribeEvent
+    fun onPriceUpdate(event: PriceDataUpdateEvent) {
+        resetCache()
+        forceRecalc = true
+    }
+
+    private fun resetCache() {
+        lastContentHash = null
+        cachedCroesusChests = emptyList()
+        cachedChestProfit = null
+    }
+
+    private fun getGuiContentHash(gui: GuiContainer): Int {
+        return gui.inventorySlots.inventorySlots
+            .joinToString("|") { it.stack?.displayName ?: "empty" }
+            .hashCode()
     }
 
     private fun CroesusMenuHighlight(gui: GuiContainer) {
@@ -59,10 +110,8 @@ object ProfitTracker : Module(
         }
     }
 
-    private fun CroesusChestsProfitHighlight(gui: GuiContainer) {
-        drawCustomOverlay(gui)
+    private fun calculateCroesusChestsProfits(gui: GuiContainer): List<Pair<Int, Int>> {
         val chestProfits = mutableListOf<Pair<Int, Int>>()
-
         forEachValidSlot(gui) { slot, stack ->
             val name = stack.cleanName()
             if (DungeonChestsGuiTitle.contains(name) && stack.getItemLore().none { "Already opened!" in it }) {
@@ -70,28 +119,28 @@ object ProfitTracker : Module(
                 chestProfits += slot.slotNumber to calculateChestProfit(loot, costs)
             }
         }
+        return chestProfits.sortedByDescending { it.second }
+    }
 
-        val sorted = chestProfits.sortedByDescending { it.second }
-        sorted.getOrNull(0)?.let { (slot, profit) ->
+    private fun drawCroesusChests(gui: GuiContainer, chestProfits: List<Pair<Int, Int>>) {
+        drawCustomOverlay(gui)
+        chestProfits.getOrNull(0)?.let { (slot, profit) ->
             highlightSlot(gui, slot, mostProfitColor.value, false)
             writeAboveSlot(gui, slot, profit.toCoins(), mostProfitColor.value)
         }
-        sorted.getOrNull(1)?.let { (slot, profit) ->
+        chestProfits.getOrNull(1)?.let { (slot, profit) ->
             highlightSlot(gui, slot, secondMostProfitColor.value, false)
             writeBelowSlot(gui, slot, profit.toCoins(), secondMostProfitColor.value)
         }
     }
 
-    private fun ChestProfitHighlight(gui: GuiContainer) {
-        drawCustomOverlay(gui)
-
+    private fun calculateChestProfitForGui(gui: GuiContainer): Pair<Int, Int>? {
         var openChestSlot = -1
         val cost = mutableListOf<String>()
         val loot = mutableListOf<String>()
 
         forEachValidSlot(gui) { slot, stack ->
             val name = stack.cleanName()
-
             when {
                 name == "Open Reward Chest" -> {
                     openChestSlot = slot.slotNumber
@@ -100,18 +149,17 @@ object ProfitTracker : Module(
                 name.contains("Essence") -> loot += name
                 else -> {
                     var id = getSkyblockItemID(stack)
-                    if (id.isNullOrBlank()) {
-                        id = stack.displayName.removeFormatting()
-                    }
+                    if (id.isNullOrBlank()) id = stack.displayName.removeFormatting()
                     loot += id
                 }
             }
         }
+        return if (openChestSlot >= 0) openChestSlot to calculateChestProfit(loot, cost) else null
+    }
 
-        if (openChestSlot >= 0) {
-            val profit = calculateChestProfit(loot, cost)
-            writeBelowSlot(gui, openChestSlot, profit.toCoins(), mostProfitColor.value)
-        }
+    private fun drawChestProfit(gui: GuiContainer, slot: Int, profit: Int) {
+        drawCustomOverlay(gui)
+        writeBelowSlot(gui, slot, profit.toCoins(), mostProfitColor.value)
     }
 
     private fun drawCustomOverlay(gui: GuiContainer) {
@@ -123,7 +171,6 @@ object ProfitTracker : Module(
 
     private fun calculateChestProfit(loot: List<String>, costs: List<String>): Int {
         val essencePattern = """(Wither|Undead) Essence x(\d+)""".toRegex()
-
         val totalLootValue = loot.sumOf { raw ->
             val m = essencePattern.find(raw)
             val (baseName, qty) = if (m != null) {
@@ -131,13 +178,11 @@ object ProfitTracker : Module(
             } else {
                 raw.substringBefore(" x") to 1
             }
-
             val sbId = getSkyblockIdFromName(baseName)
             if (!uselessDungeonLoot.contains(sbId) && !sbId.isBlank()) {
                 qty * getPrice(sbId, sellOffer.value, includeTaxes.value)
             } else 0
         }
-
         val totalCost = costs.sumOf { cost ->
             when {
                 cost == "Dungeon Chest Key" && includeKeyPrice.value ->
@@ -146,14 +191,12 @@ object ProfitTracker : Module(
                 else -> 0
             }
         }
-
         return totalLootValue - totalCost
     }
 
     private fun ItemStack.getChestContentsAndCost(): Pair<List<String>, List<String>> {
         val tooltip = getTooltip(mc.thePlayer, false)
             .map { EnumChatFormatting.getTextWithoutFormattingCodes(it).replaceLvlTag(it) }
-
         return tooltip.sectionBetween("Contents", "Cost") to tooltip.sectionAfter("Cost")
     }
 
@@ -172,8 +215,7 @@ object ProfitTracker : Module(
 
     private fun ItemStack.cleanName() = displayName.removeFormatting()
 
-    private fun Int.toCoins(): String =
-        "${numberFormatter.format(this)} Coins"
+    private fun Int.toCoins(): String = "${numberFormatter.format(this)} Coins"
 
     private inline fun forEachValidSlot(
         gui: GuiContainer,

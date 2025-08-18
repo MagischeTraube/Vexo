@@ -12,7 +12,7 @@ private val dtkickMessages = listOf(
 
 object AutoRejoin : Module(
 name = "Auto Rejoin on Kick",
-description = "Automaticly rejoins Skyblock after being kicked.",
+description = "Automatically rejoins Skyblock after being kicked.",
 category = "Test"
 ) {
 
