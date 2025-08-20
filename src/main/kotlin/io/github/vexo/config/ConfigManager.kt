@@ -23,8 +23,6 @@ object ConfigManager {
     private val gson = Gson()
     private val configFile = File("config/Vexo/vexo.cfg")
 
-    data class ModuleConfig(val name: String, val enabled: Boolean, val settings: Map<String, Any>)
-
     fun load() {
         if (!configFile.exists()) return
         val text = configFile.readText()
@@ -46,7 +44,7 @@ object ConfigManager {
                             }
                             else -> {
                                 @Suppress("UNCHECKED_CAST")
-                                (setting as Setting<Any>).value = value
+                                (setting as Setting<Any?>).value = value
                             }
                         }
                     }

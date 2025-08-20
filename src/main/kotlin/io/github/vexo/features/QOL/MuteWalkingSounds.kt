@@ -23,7 +23,7 @@ object MuteWalkingSounds : Module(
     )
 
     @SubscribeEvent
-    fun onChat(event: PlaySoundEvent) {
+    fun onSoundPlay(event: PlaySoundEvent) {
         val sound: ISound = event.sound ?: return
 
         if (walkingSounds.any { sound.soundLocation.toString().contains(it) }) {
