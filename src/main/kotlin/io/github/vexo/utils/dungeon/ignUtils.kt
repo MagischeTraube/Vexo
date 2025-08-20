@@ -10,10 +10,10 @@ val FORMATTING_CODE_PATTERN = Regex("§[0-9a-fk-or]", RegexOption.IGNORE_CASE)
 inline val String?.noControlCodes: String
     get() = this?.replace(FORMATTING_CODE_PATTERN, "") ?: ""
 
-object DungeonTabList {
+
     var tabListEntries: List<String> = emptyList()
 
-    private val lastKnownRoles: MutableMap<String, String?> = mutableMapOf(
+     val lastKnownRoles: MutableMap<String, String?> = mutableMapOf(
         "Tank" to null,
         "Archer" to null,
         "Berserk" to null,
@@ -37,10 +37,17 @@ object DungeonTabList {
 
         listOf("Tank", "Archer", "Berserk", "Mage", "Healer").forEach { role ->
             val ign = findIGNForRole(role)
-            if (ign != null) { // Nur aktualisieren, wenn ein Spieler mit der Rolle gefunden wird
+            if (ign != null) {
                 lastKnownRoles[role] = ign
             }
         }
+        modMessage(
+            "Tank: ${lastKnownRoles["Tank"]}, " +
+                    "Archer: ${lastKnownRoles["Archer"]}, " +
+                    "Berserk: ${lastKnownRoles["Berserk"]}, " +
+                    "Mage: ${lastKnownRoles["Mage"]}, " +
+                    "Healer: ${lastKnownRoles["Healer"]}"
+        )
     }
 
     fun findIGNForRole(role: String): String? {
@@ -51,20 +58,23 @@ object DungeonTabList {
             } else null
         }
     }
-}
+
 
 fun myIGN(): String {
     return Minecraft.getMinecraft().thePlayer.name
 }
 
 fun ownClass(): String? {
-    val myName = myIGN()
-
-    listOf("Tank", "Archer", "Berserk", "Mage", "Healer").forEach { role ->
-        if (DungeonTabList.findIGNForRole(role)?.equals(myName, ignoreCase = true) == true) {
-            return role
-        }
-    }
-
-    return null
+    var clazz = null
+    if (Minecraft.getMinecraft().thePlayer.name == lastKnownRoles["Tank"])
+        return "Tank"
+    else if (Minecraft.getMinecraft().thePlayer.name == lastKnownRoles["Archer"])
+        return "Arch"
+    else if (Minecraft.getMinecraft().thePlayer.name == lastKnownRoles["Berserk"])
+        return "Bers"
+    else if (Minecraft.getMinecraft().thePlayer.name == lastKnownRoles["Mage"])
+        return "Mage"
+    else if (Minecraft.getMinecraft().thePlayer.name == lastKnownRoles["Healer"])
+        return "Healer"
+    else return null
 }
