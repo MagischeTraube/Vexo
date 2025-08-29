@@ -8,6 +8,7 @@ import io.github.vexo.features.QOL.AutoRejoin
 import io.github.vexo.features.QOL.MuteWalkingSounds
 import io.github.vexo.features.chat.*
 import io.github.vexo.features.dungeons.*
+import io.github.vexo.features.dungeons.PadTimer
 import io.github.vexo.utils.skyblock.PriceUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
@@ -25,7 +26,7 @@ class Vexo {
     fun init(event: FMLInitializationEvent) {
 
         listOf(
-            EventTrigger, EndOfRun, checkForUpdateOnStartup, PriceUtils
+            EventTrigger, EndOfRun, checkForUpdateOnStartup, PriceUtils, IGNUtils
         ).forEach { MinecraftForge.EVENT_BUS.register(it) }
 
 
@@ -41,7 +42,8 @@ class Vexo {
          * Features
          */
         val FEATURES = listOf(
-            RagAxeNow, ChatCleaner, HideMageSheep, AnnounceClass, ProfitTracker, AutoRejoin, MuteWalkingSounds
+            RagAxeNow, ChatCleaner, HideMageSheep, AnnounceClass, ProfitTracker, AutoRejoin, MuteWalkingSounds,
+            PadTimer
         )
         ModuleManager.register(FEATURES)
 
