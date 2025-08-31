@@ -20,7 +20,7 @@ object PadTimer : Module (
         Regex("\\[BOSS] Storm: THUNDER LET ME BE YOUR CATALYST!")
     )
 
-    @SubscribeEvent
+    @SubscribeEvent(receiveCanceled = true)
     fun onChat(event: ChatPacketEvent) {
         if (PadTimer.any { it.containsMatchIn(event.message) })
         when (PadSetting.value) {
