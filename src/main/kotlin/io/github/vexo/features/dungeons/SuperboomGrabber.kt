@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 object SuperboomGrabber: Module(
     name = "Superboom Grabber",
     description = "Automatically grabs Superboom at the start of a Dungeon Run, requires Odin",
-    category = "Dungeon"
+    category = "Dungeons"
 ) {
     @SubscribeEvent
     fun onChat(event: ChatPacketEvent){
