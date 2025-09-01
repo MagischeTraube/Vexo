@@ -11,7 +11,7 @@ object RagAxeNow : Module(
     description = "Triggers when RagAxe is mentioned in chat.",
     category = "Dungeons"
 ) {
-    @SubscribeEvent
+    @SubscribeEvent(receiveCanceled = true)
     fun onChat(event: ChatPacketEvent) {
         if (RagAxeTriggers.any { it.containsMatchIn(event.message) }) {
             modMessage("RagAxe Now!")
