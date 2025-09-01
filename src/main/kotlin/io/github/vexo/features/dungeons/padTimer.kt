@@ -24,8 +24,8 @@ object PadTimer : Module (
     fun onChat(event: ChatPacketEvent) {
         if (PadTimer.any { it.containsMatchIn(event.message) })
         when (PadSetting.value) {
-            "Green" -> ServerTicks = 171
-            "Purple" -> ServerTicks = 96
+            "Green" -> ServerTicks = 181
+            "Purple" -> ServerTicks = 106
         }
     }
 
@@ -35,12 +35,12 @@ object PadTimer : Module (
             ServerTicks --
 
         when(ServerTicks){
-            50 -> modMessage("Pad in §a2.5s!")
-            40 -> modMessage("Pad in §a2.0s!")
-            30 -> modMessage("Pad in §a1.5s!")
-            20 -> modMessage("Pad in §e1.0s!")
-            10 -> modMessage("Pad in §e0.5s!")
-            0 -> modMessage("Pad §cNOW!")
+            60 -> modMessage("Pad in §a2.5s!")
+            50 -> modMessage("Pad in §a2.0s!")
+            40 -> modMessage("Pad in §a1.5s!")
+            30 -> modMessage("Pad in §e1.0s!")
+            20 -> modMessage("Pad in §e0.5s!")
+            10 -> modMessage("Pad §cNOW!")
         }
     }
 }
