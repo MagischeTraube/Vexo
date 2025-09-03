@@ -14,6 +14,7 @@ object ChatCleaner : Module(
 ){
     private val RandomSpam = registerSetting(BooleanSetting("Random Spam", true, "Schaltet das Feature ein/aus"))
     private val RandomDungeonSpawn = registerSetting(BooleanSetting("Dungeon Spam", true, "Schaltet das Feature ein/aus"))
+    private val AutoPet = registerSetting(BooleanSetting("Hide Autopet", true, "Schaltet das Feature ein/aus"))
     @SubscribeEvent
     fun onChat(event: ChatPacketEvent) {
 
@@ -23,10 +24,13 @@ object ChatCleaner : Module(
         if (RandomDungeonSpawn.value && RandomDungeonSpawnRegex.any { it.containsMatchIn(event.message) }) {
             event.setCanceled(true)
         }
+        if (AutoPet.value && AutoPetRegex.any { it.containsMatchIn(event.message) }) {
+            event.setCanceled(true)
+        }
     }
 
     private val RandomSpamRegex = listOf(
-        Regex("Your pickaxe ability is on cooldown for .+s."),
+        Regex("Your Pickaxe ability is on cooldown for .+s."),
         Regex("AUTO-PICKUP! Drop sent to your inventory! \\[I GET IT\\]"),
         Regex("Warping you to your SkyBlock island..."),
         Regex("You earned .+ Event EXP from playing SkyBlock!"),
@@ -38,7 +42,6 @@ object ChatCleaner : Module(
         Regex("Whow! Slow down there!"),
         Regex("Woah slow down, you're doing that too fast!"),
         Regex("Command Failed: This command is on cooldown! Try again in about a second!"),
-        Regex("Autopet equipped your.+"),
         Regex("Your Auto Recombobulator recombobulated"),
         Regex("Blacklisted modifications are a bannable offense!"),
         Regex("\\[WATCHDOG ANNOUNCEMENT\\]"),
@@ -46,6 +49,9 @@ object ChatCleaner : Module(
         Regex("You sold .+ x.* for .+"),
         Regex("You don't have enough space in your inventory to pick up this item!.+"),
         Regex("Inventory full\\? Don't forget to check out your Storage inside the SkyBlock Menu!"),
+        Regex("(This totals 2 types of materials stashed!)"),
+        Regex(">>> CLICK HERE to pick them up! <<<"),
+        Regex("^ +$"),
         Regex("You are not allowed to use Potion Effects.+"),
         Regex("You summoned your.+"),
         Regex("Moved .+ Ender Pearl from your Sacks to your inventory."),
@@ -108,7 +114,7 @@ object ChatCleaner : Module(
         Regex("The Lost Adventurer used Dragon's Breath on you!"),
         Regex("Throwing Axe is now available!"),
         Regex("Used Throwing Axe!"),
-        Regex("\\[STATUE\\] Oruo the Omniscient: [^I am Oruo the Omniscient.].+"),
+        Regex("""\\[STATUE\\] Oruo the Omniscient: (?!I am Oruo the Omniscient\\.).+"""),
         Regex("\\[NPC\\] (Hugo)"),
         Regex("PUZZLE SOLVED!.+"),
         Regex("DUNGEON BUFF! .+"),
@@ -117,7 +123,7 @@ object ChatCleaner : Module(
         Regex("\\[(Tank|Healer|Mage|Archer|Berserk)+\\] .+"),
         Regex("\\[SKULL\\] .+"),
         Regex("\\[BOMB\\] Creeper:.+"),
-        Regex("\\[Boss\\].+"),
+        Regex("\\[BOSS].+"),
         Regex("\\[Sacks\\] .+ item.+"),
         Regex("The .+ Trap hit you for .+ damage!"),
         Regex("Healer Milestone.+"),
@@ -147,7 +153,10 @@ object ChatCleaner : Module(
         Regex("Moved .+ from your Sacks to your inventory."),
         Regex("◕ \\w+ picked up your .+ Orb!"),
         Regex("Your tether with .+ healed you for .+ health.")
+    )
 
+    val AutoPetRegex = listOf(
+        Regex("Autopet equipped your.+")
     )
 
 }
