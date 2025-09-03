@@ -25,7 +25,7 @@ category = "QOL"
         } else if (dtkickMessages.any { it.containsMatchIn(event.message)} && !rejoining) {
             Thread {
                 rejoining = true
-                partyMessage("Kicked, trying to rejoining in 65 Seconds",)
+                partyMessage("kicked")
                 modMessage("65 Seconds until rejoin")
                 Thread.sleep(30000)
                 modMessage("30 Seconds until rejoin")

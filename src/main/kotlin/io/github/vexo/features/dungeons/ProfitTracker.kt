@@ -7,6 +7,7 @@ import io.github.vexo.config.Module
 import io.github.vexo.events.PriceDataUpdateEvent
 import io.github.vexo.utils.skyblock.*
 import io.github.vexo.utils.skyblock.PriceUtils.getPrice
+import io.github.vexo.utils.skyblock.PriceUtils.setForceFetch
 import net.minecraft.client.gui.inventory.GuiContainer
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumChatFormatting
@@ -35,11 +36,15 @@ object ProfitTracker : Module(
     private val customGui = registerSetting(BooleanSetting("Change Gui Color", true))
     private val customGuiColor = registerSetting(ColorSetting("Gui Color", Color(79, 79, 79)))
 
+    private val showNegativeProfit = registerSetting(BooleanSetting("Show negative Profit", true))
+
     private var lastContentHash: Int? = null
     private var cachedCroesusChests: List<Pair<Int, Int>> = emptyList()
     private var cachedChestProfit: Pair<Int, Int>? = null
 
     private var forceRecalc = false
+
+    private var lastGuiTitle: String? = null
 
     @SubscribeEvent
     fun onGuiRender(event: GuiScreenEvent.DrawScreenEvent.Pre) {
@@ -47,7 +52,13 @@ object ProfitTracker : Module(
         val guiContentHash = getGuiContentHash(gui)
 
         when (val title = gui.getGuiTitle() ?: return) {
-            CroesusMenuGuiTitle -> CroesusMenuHighlight(gui)
+            CroesusMenuGuiTitle -> {
+                CroesusMenuHighlight(gui)
+
+                if (lastGuiTitle != CroesusMenuGuiTitle) {
+                    setForceFetch()
+                }
+            }
 
             else -> when {
                 CroesusChestsGuiTitle.any { title.contains(it) } -> {
@@ -129,8 +140,13 @@ object ProfitTracker : Module(
             writeAboveSlot(gui, slot, profit.toCoins(), mostProfitColor.value)
         }
         chestProfits.getOrNull(1)?.let { (slot, profit) ->
-            highlightSlot(gui, slot, secondMostProfitColor.value, false)
-            writeBelowSlot(gui, slot, profit.toCoins(), secondMostProfitColor.value)
+            if (showNegativeProfit.value || profit < 0) {
+                if (profit < 0) {
+                    recolorSlot(gui, slot, Color(255, 0, 0 ))
+                }
+                highlightSlot(gui, slot, secondMostProfitColor.value, false)
+                writeBelowSlot(gui, slot, profit.toCoins(), secondMostProfitColor.value)
+            }
         }
     }
 

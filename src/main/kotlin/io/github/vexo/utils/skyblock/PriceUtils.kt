@@ -24,6 +24,8 @@ object PriceUtils {
     private val PRICE_DATA_FILE = File("config/Vexo/PRICE_DATA.json")
     private var lastFetchTime: Long = 0
     private const val FETCH_INTERVAL_MS = 20 * 60 * 1000L // 20 mins
+    private var forceFetch = false
+    private var FORCE_FETCH_INTERVAL_MS = 5 * 60 * 1000L // 5 mins
 
     private val SHINY_ITEMS = listOf(
         "NECRON_HANDLE",
@@ -54,8 +56,11 @@ object PriceUtils {
     @SubscribeEvent
     fun onServerTick(event: ServerTickEvent) {
         val currentTime = System.currentTimeMillis()
-        if (currentTime - lastFetchTime >= FETCH_INTERVAL_MS) {
+        if ((forceFetch && currentTime - lastFetchTime >= FORCE_FETCH_INTERVAL_MS)
+            || (currentTime - lastFetchTime >= FETCH_INTERVAL_MS)
+        ) {
             fetchPrices()
+            forceFetch = false
             lastFetchTime = currentTime
         }
     }
@@ -144,6 +149,10 @@ object PriceUtils {
         }
 
         return afterStartFee
+    }
+
+    fun setForceFetch() {
+        forceFetch = true
     }
 
     private fun parseLowestBin(priceData: ConcurrentHashMap<String, PriceData>) {
