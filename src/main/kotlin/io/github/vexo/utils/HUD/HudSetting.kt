@@ -1,8 +1,10 @@
 package io.github.vexo.utils.HUD // Change this to match your actual package
 
 import io.github.vexo.config.Module // Change this to match your Module location
+import io.github.vexo.utils.HUD.TestHUD
 import kotlin.reflect.KProperty
 import net.minecraft.client.Minecraft
+import io.github.vexo.Vexo.Companion.mc
 
 // Simple HUD element that stores position, scale, and rendering logic
 class HudElement(
@@ -18,13 +20,22 @@ class HUDSetting(
     val name: String,
     x: Float,
     y: Float,
-    val scale: Float,
+    scale: Float,
     val toggleable: Boolean,
     val description: String,
-    val module: Module,
-    val block: (Boolean) -> Pair<Number, Number>
+    val module: Module
 ) {
-    val value = HudElement(x, y, scale, true, block)
+
+    init {
+        HUDRenderer.addHUD(this)
+    }
+
+    val font = mc.fontRendererObj
+    val height = (font.FONT_HEIGHT).toFloat()
+    val width = (font.getStringWidth(name)).toFloat()
+    val block = width to height
+    val value = HudElement(x, y, scale, true) { _ -> block }
+
 
     // Dragging variables
     private var isDragging = false
@@ -48,18 +59,25 @@ class HUDSetting(
             lastWidth = width.toFloat()
             lastHeight = height.toFloat()
 
-            // Draw the HUD content
+            // Apply scaling and draw the HUD content
+            net.minecraft.client.renderer.GlStateManager.pushMatrix()
+            net.minecraft.client.renderer.GlStateManager.scale(value.scale, value.scale, 1.0f)
+
+            val scaledX = (value.x / value.scale).toInt()
+            val scaledY = (value.y / value.scale).toInt()
+
             mc.fontRendererObj.drawString(
                 name,
-                value.x.toInt(),
-                value.y.toInt(),
+                scaledX,
+                scaledY,
                 0xFFFFFF // White color
             )
 
-            // Draw border in edit mode
-            if (HUDEditManager.editMode) {
-                drawEditBorder()
-            }
+            net.minecraft.client.renderer.GlStateManager.popMatrix()
+
+            // Update actual dimensions after scaling
+            lastWidth *= value.scale
+            lastHeight *= value.scale
 
             width to height
         } else {
@@ -67,19 +85,64 @@ class HUDSetting(
         }
     }
 
-    private fun drawEditBorder() {
+    // Special render function for edit mode
+    fun renderInEditMode(isSelected: Boolean): Pair<Number, Number> {
+        // Get Minecraft instance
         val mc = Minecraft.getMinecraft()
-        // Draw a border around the HUD in edit mode
-        val x1 = value.x.toInt() - 2
-        val y1 = value.y.toInt() - 2
-        val x2 = (value.x + lastWidth).toInt() + 2
-        val y2 = (value.y + lastHeight).toInt() + 2
 
-        // Draw border (you might need to adjust this based on your rendering system)
-        net.minecraft.client.gui.Gui.drawRect(x1, y1, x2, y1 + 1, 0xFFFFFFFF.toInt()) // Top
-        net.minecraft.client.gui.Gui.drawRect(x1, y2 - 1, x2, y2, 0xFFFFFFFF.toInt()) // Bottom
-        net.minecraft.client.gui.Gui.drawRect(x1, y1, x1 + 1, y2, 0xFFFFFFFF.toInt()) // Left
-        net.minecraft.client.gui.Gui.drawRect(x2 - 1, y1, x2, y2, 0xFFFFFFFF.toInt()) // Right
+        // Call the user's drawing function and get dimensions
+        val (width, height) = value.draw(false)
+        lastWidth = width.toFloat()
+        lastHeight = height.toFloat()
+
+        // Apply scaling and draw the HUD content
+        net.minecraft.client.renderer.GlStateManager.pushMatrix()
+        net.minecraft.client.renderer.GlStateManager.scale(value.scale, value.scale, 1.0f)
+
+        val scaledX = (value.x / value.scale).toInt()
+        val scaledY = (value.y / value.scale).toInt()
+
+        mc.fontRendererObj.drawString(
+            name,
+            scaledX,
+            scaledY,
+            0xFFFFFF // White color
+        )
+
+        net.minecraft.client.renderer.GlStateManager.popMatrix()
+
+        // Update actual dimensions after scaling
+        lastWidth *= value.scale
+        lastHeight *= value.scale
+
+        // Draw border in edit mode
+        drawEditBorder(isSelected)
+
+        return width to height
+    }
+
+    private fun drawEditBorder(isSelected: Boolean = false) {
+        // Choose border color based on selection
+        val borderColor = if (isSelected) 0xFF00FF00.toInt() else 0xFFFFFFFF.toInt() // Green if selected, white otherwise
+
+        val x1 = value.x.toInt() - 3
+        val y1 = value.y.toInt() - 3
+        val x2 = (value.x + lastWidth).toInt() + 3
+        val y2 = (value.y + lastHeight).toInt() + 3
+
+        // Draw border
+        val borderWidth = 1
+
+        net.minecraft.client.gui.Gui.drawRect(x1, y1, x2, y1 + borderWidth, borderColor) // Top (thicker if selected)
+        net.minecraft.client.gui.Gui.drawRect(x1, y2 - borderWidth, x2, y2, borderColor) // Bottom
+        net.minecraft.client.gui.Gui.drawRect(x1, y1, x1 + borderWidth, y2, borderColor) // Left
+        net.minecraft.client.gui.Gui.drawRect(x2 - borderWidth, y1, x2, y2, borderColor) // Right
+    }
+
+    // Check if mouse is over this HUD
+    fun isMouseOver(mouseX: Float, mouseY: Float): Boolean {
+        return mouseX >= value.x && mouseX <= value.x + lastWidth &&
+                mouseY >= value.y && mouseY <= value.y + lastHeight
     }
 
     // Handle mouse click for dragging
@@ -115,7 +178,9 @@ class HUDSetting(
     }
 
     // Handle mouse release
-    fun handleMouseRelease() {
+    fun handleMouseRelease(): Boolean {
+        val wasDragging = isDragging
         isDragging = false
+        return wasDragging // Return true if position might have changed
     }
 }

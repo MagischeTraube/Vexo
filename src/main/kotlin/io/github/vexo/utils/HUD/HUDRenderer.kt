@@ -3,6 +3,7 @@ package io.github.vexo.utils.HUD // Change to match your package
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.common.MinecraftForge
+import io.github.vexo.utils.HUD.*
 
 object HUDRenderer {
 
@@ -12,12 +13,20 @@ object HUDRenderer {
     init {
         // Register this object to receive events
         MinecraftForge.EVENT_BUS.register(this)
+
+        // Load positions on startup
+        loadAllPositions()
     }
 
     // Add a HUD to be rendered
     fun addHUD(hud: HUDSetting) {
         huds.add(hud)
+        // Load saved position for this HUD
+        HUDConfigManager.loadHUDPosition(hud)
     }
+
+    // Get all HUDs (for saving)
+    fun getAllHUDs(): List<HUDSetting> = huds
 
     // This runs every frame when the game overlay is being rendered
     @SubscribeEvent
@@ -34,14 +43,24 @@ object HUDRenderer {
     }
 
     // Render HUDs in edit mode (called from HUDEditScreen)
-    fun renderInEditMode(mouseX: Int, mouseY: Int) {
+    fun renderInEditMode(mouseX: Int, mouseY: Int, hoveredHUD: HUDSetting? = null) {
         for (hud in huds) {
             // Force render all HUDs in edit mode (even disabled ones)
             val originalEnabled = hud.value.enabled
             hud.value.enabled = true
-            hud.render()
+            hud.renderInEditMode(hud == hoveredHUD)
             hud.value.enabled = originalEnabled
         }
+    }
+
+    // Get the HUD that the mouse is hovering over
+    fun getHoveredHUD(mouseX: Float, mouseY: Float): HUDSetting? {
+        for (hud in huds) {
+            if (hud.isMouseOver(mouseX, mouseY)) {
+                return hud
+            }
+        }
+        return null
     }
 
     // Handle mouse clicks in edit mode
@@ -60,8 +79,25 @@ object HUDRenderer {
 
     // Handle mouse release in edit mode
     fun handleMouseRelease() {
+        var anythingMoved = false
         for (hud in huds) {
-            hud.handleMouseRelease()
+            if (hud.handleMouseRelease()) {
+                anythingMoved = true
+            }
         }
+        // Save positions if anything was moved
+        if (anythingMoved) {
+            HUDConfigManager.saveAllHUDs()
+        }
+    }
+
+    // Load all positions from file
+    fun loadAllPositions() {
+        HUDConfigManager.loadAllHUDs()
+    }
+
+    // Save all positions to file
+    fun saveAllPositions() {
+        HUDConfigManager.saveAllHUDs()
     }
 }

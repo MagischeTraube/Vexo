@@ -38,9 +38,8 @@ abstract class Module(
         toggleable: Boolean = true,
         x: Float = 10f,
         y: Float = 10f,
-        scale: Float = 2f,
-        block: (example: Boolean) -> Pair<Number, Number>
-    ): HUDSetting = HUDSetting(name, x, y, scale, toggleable, desc, this, block)
+        scale: Float = 2f
+    ): HUDSetting = HUDSetting(name, x, y, scale, toggleable, desc, this)
 
 }
 

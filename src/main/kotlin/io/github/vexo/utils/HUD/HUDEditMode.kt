@@ -10,6 +10,8 @@ import org.lwjgl.input.Keyboard
 // Simple HUD Edit GUI
 class HUDEditScreen : GuiScreen() {
 
+    private var hoveredHUD: HUDSetting? = null
+
     override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
         // Draw semi-transparent background
         drawRect(0, 0, width, height, 0x80000000.toInt())
@@ -18,7 +20,8 @@ class HUDEditScreen : GuiScreen() {
         val instructions = listOf(
             "HUD Edit Mode - Press ESC to exit",
             "Click and drag HUD elements to move them",
-            "All HUDs are visible for editing"
+            "Scroll wheel to resize selected HUD",
+            "Hover over HUD to see module info"
         )
 
         var yOffset = 10
@@ -27,8 +30,23 @@ class HUDEditScreen : GuiScreen() {
             yOffset += 12
         }
 
+        // Update hovered HUD
+        hoveredHUD = HUDRenderer.getHoveredHUD(mouseX.toFloat(), mouseY.toFloat())
+
         // Render all HUDs in edit mode
-        HUDRenderer.renderInEditMode(mouseX, mouseY)
+        HUDRenderer.renderInEditMode(mouseX, mouseY, hoveredHUD)
+
+        // Draw tooltip for hovered HUD
+        hoveredHUD?.let { hud ->
+            drawHoveringText(
+                listOf(
+                    "Module: ${hud.module.name}",
+                    "Position: (${hud.value.x.toInt()}, ${hud.value.y.toInt()})",
+                    "Scale: ${String.format("%.1f", hud.value.scale)}x"
+                ),
+                mouseX +10, mouseY
+            )
+        }
 
         super.drawScreen(mouseX, mouseY, partialTicks)
     }
@@ -47,6 +65,22 @@ class HUDEditScreen : GuiScreen() {
     override fun mouseClickMove(mouseX: Int, mouseY: Int, clickedMouseButton: Int, timeSinceLastClick: Long) {
         HUDRenderer.handleMouseDrag(mouseX.toFloat(), mouseY.toFloat())
         super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick)
+    }
+
+    override fun handleMouseInput() {
+        super.handleMouseInput()
+
+        // Handle scroll wheel for scaling
+        val scroll = org.lwjgl.input.Mouse.getEventDWheel()
+        if (scroll != 0 && hoveredHUD != null) {
+            val hud = hoveredHUD!!
+            val scaleChange = if (scroll > 0) 0.1f else -0.1f
+            val newScale = (hud.value.scale + scaleChange).coerceIn(0.5f, 3.0f)
+            hud.value.scale = newScale
+
+            // Save the scale change
+            HUDConfigManager.saveHUDPosition(hud)
+        }
     }
 
     override fun doesGuiPauseGame(): Boolean = false
@@ -80,7 +114,7 @@ object HUDEditManager {
     @SubscribeEvent
     fun onKeyInput(event: InputEvent.KeyInputEvent) {
         // Press Shift + H to toggle HUD edit mode
-        if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
+        if (Keyboard.isKeyDown(Keyboard.KEY_H) && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             toggleEditMode()
         }
     }

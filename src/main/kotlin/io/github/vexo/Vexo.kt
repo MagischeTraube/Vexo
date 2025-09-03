@@ -3,7 +3,6 @@ package io.github.vexo
 import io.github.vexo.config.*
 import io.github.vexo.features.*
 import io.github.vexo.features.QOL.*
-import io.github.vexo.utils.dungeon.*
 import io.github.vexo.features.chat.*
 import io.github.vexo.features.dungeons.*
 import io.github.vexo.events.EventTrigger
