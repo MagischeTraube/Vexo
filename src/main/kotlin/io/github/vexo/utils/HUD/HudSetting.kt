@@ -1,10 +1,8 @@
 package io.github.vexo.utils.HUD // Change this to match your actual package
 
 import io.github.vexo.config.Module // Change this to match your Module location
-import io.github.vexo.utils.HUD.TestHUD
 import kotlin.reflect.KProperty
 import net.minecraft.client.Minecraft
-import io.github.vexo.Vexo.Companion.mc
 
 // Simple HUD element that stores position, scale, and rendering logic
 class HudElement(
@@ -23,20 +21,13 @@ class HUDSetting(
     scale: Float,
     val toggleable: Boolean,
     val description: String,
-    val module: Module
+    val module: Module,
+    val block: (Boolean) -> Pair<Number, Number>
 ) {
-
+    val value = HudElement(x, y, scale, true, block)
     init {
         HUDRenderer.addHUD(this)
     }
-
-    val font = mc.fontRendererObj
-    val height = (font.FONT_HEIGHT).toFloat()
-    val width = (font.getStringWidth(name)).toFloat()
-    val block = width to height
-    val value = HudElement(x, y, scale, true) { _ -> block }
-
-
     // Dragging variables
     private var isDragging = false
     private var dragOffsetX = 0f

@@ -10,6 +10,7 @@ object TestHUD : Module(
     description = "Simple test HUD to verify the system works",
     category = "Dungeons"
 ) {
+    private val mc = Minecraft.getMinecraft()
     private val hudText = "Test HUD 12313123121"
 
     private val hud = HUDSetting(
@@ -20,9 +21,16 @@ object TestHUD : Module(
         toggleable = true,
         description = "Shows a simple test message",
         module = this,
-
+        block = {
+            val font = mc.fontRendererObj
+            val width = (font.getStringWidth(hudText)).toFloat()
+            val height = (font.FONT_HEIGHT).toFloat()
+            width to height
+        }
     )
-
+    init {
+        HUDRenderer.addHUD(hud)
+    }
 
     @SubscribeEvent(receiveCanceled = true)
     fun onChat(event: ChatPacketEvent) {
