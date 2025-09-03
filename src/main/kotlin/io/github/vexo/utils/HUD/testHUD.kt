@@ -1,8 +1,8 @@
 package io.github.vexo.utils.HUD
 
+import io.github.vexo.Vexo.Companion.mc
 import io.github.vexo.config.*
 import io.github.vexo.events.ChatPacketEvent
-import net.minecraft.client.Minecraft
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
 object TestHUD : Module(
@@ -10,7 +10,6 @@ object TestHUD : Module(
     description = "Simple test HUD to verify the system works",
     category = "Dungeons"
 ) {
-    private val mc = Minecraft.getMinecraft()
     private val hudText = "Test HUD 12313123121"
 
     private val hud = HUDSetting(
@@ -20,17 +19,8 @@ object TestHUD : Module(
         scale = 1f,
         toggleable = true,
         description = "Shows a simple test message",
-        module = this,
-        block = {
-            val font = mc.fontRendererObj
-            val width = (font.getStringWidth(hudText)).toFloat()
-            val height = (font.FONT_HEIGHT).toFloat()
-            width to height
-        }
+        module = this
     )
-    init {
-        HUDRenderer.addHUD(hud)
-    }
 
     @SubscribeEvent(receiveCanceled = true)
     fun onChat(event: ChatPacketEvent) {

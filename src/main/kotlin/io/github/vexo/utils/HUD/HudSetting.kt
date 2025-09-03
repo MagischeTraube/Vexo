@@ -1,5 +1,6 @@
 package io.github.vexo.utils.HUD // Change this to match your actual package
 
+import io.github.vexo.Vexo.Companion.mc
 import io.github.vexo.config.Module // Change this to match your Module location
 import kotlin.reflect.KProperty
 import net.minecraft.client.Minecraft
@@ -10,7 +11,7 @@ class HudElement(
     var y: Float,
     var scale: Float,
     var enabled: Boolean = true,
-    val draw: (Boolean) -> Pair<Number, Number>
+    val draw: Pair<Number, Number>
 )
 
 // HUDSetting that works as a property delegate
@@ -22,9 +23,13 @@ class HUDSetting(
     val toggleable: Boolean,
     val description: String,
     val module: Module,
-    val block: (Boolean) -> Pair<Number, Number>
 ) {
+    val font = mc.fontRendererObj
+    val width = (font.getStringWidth(name)).toFloat()
+    val height = (font.FONT_HEIGHT).toFloat()
+    val block = width to height
     val value = HudElement(x, y, scale, true, block)
+
     init {
         HUDRenderer.addHUD(this)
     }
@@ -46,7 +51,6 @@ class HUDSetting(
             val mc = Minecraft.getMinecraft()
 
             // Call the user's drawing function and get dimensions
-            val (width, height) = value.draw(false)
             lastWidth = width.toFloat()
             lastHeight = height.toFloat()
 
@@ -82,7 +86,6 @@ class HUDSetting(
         val mc = Minecraft.getMinecraft()
 
         // Call the user's drawing function and get dimensions
-        val (width, height) = value.draw(false)
         lastWidth = width.toFloat()
         lastHeight = height.toFloat()
 
