@@ -10,7 +10,7 @@ class HudElement(
     var x: Float,
     var y: Float,
     var scale: Float,
-    var enabled: Boolean = true,
+    var enabled: Boolean = false,
     val draw: Pair<Number, Number>
 )
 
@@ -28,7 +28,7 @@ class HUDSetting(
     val width = (font.getStringWidth(name)).toFloat()
     val height = (font.FONT_HEIGHT).toFloat()
     val block = width to height
-    val value = HudElement(x, y, scale, true, block)
+    val value = HudElement(x, y, scale, false, block) // Changed from true to false
 
     init {
         HUDRenderer.addHUD(this)

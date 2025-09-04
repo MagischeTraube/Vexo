@@ -14,7 +14,7 @@ data class HUDPosition(
     val x: Float,
     val y: Float,
     val scale: Float = 1.0f,
-    val enabled: Boolean = true
+    val enabled: Boolean = false  // Changed from true to false
 )
 
 object HUDConfigManager {
