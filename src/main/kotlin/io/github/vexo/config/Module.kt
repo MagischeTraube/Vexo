@@ -1,5 +1,6 @@
 package io.github.vexo.config
 
+import io.github.vexo.utils.HUD.HUDSetting
 import net.minecraftforge.common.MinecraftForge
 
 abstract class Module(
@@ -29,6 +30,16 @@ abstract class Module(
             MinecraftForge.EVENT_BUS.unregister(this)
         }
     }
+
+    @Suppress("FunctionName")
+    fun HUD(
+        name: String,
+        desc: String,
+        toggleable: Boolean = true,
+        x: Float = 10f,
+        y: Float = 10f,
+        scale: Float = 2f,
+        block: (example: Boolean) -> Pair<Number, Number>
+    ): HUDSetting = HUDSetting(name, x, y, scale, toggleable, desc, this)
+
 }
-
-

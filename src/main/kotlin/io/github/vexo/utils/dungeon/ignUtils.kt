@@ -1,7 +1,6 @@
 package io.github.vexo.utils.dungeon
 
 import io.github.vexo.events.PacketEvent
-import io.github.vexo.utils.skyblock.modMessage
 import net.minecraft.network.play.server.S38PacketPlayerListItem
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraft.client.Minecraft
@@ -11,17 +10,18 @@ inline val String?.noControlCodes: String
     get() = this?.replace(FORMATTING_CODE_PATTERN, "") ?: ""
 
 
-    var tabListEntries: List<String> = emptyList()
+var tabListEntries: List<String> = emptyList()
+val myIgn = Minecraft.getMinecraft().thePlayer.name
 
-     val lastKnownRoles: MutableMap<String, String?> = mutableMapOf(
-        "Tank" to null,
-        "Archer" to null,
-        "Berserk" to null,
-        "Mage" to null,
-        "Healer" to null
-    )
+val DungeonClass: MutableMap<String, String?> = mutableMapOf(
+    "Tank" to null,
+    "Archer" to null,
+    "Berserk" to null,
+    "Mage" to null,
+    "Healer" to null
+)
 
-
+object IGNUtils {
     @SubscribeEvent
     fun onPacket(event: PacketEvent.Receive) {
         if (event.packet !is S38PacketPlayerListItem) return
@@ -38,16 +38,9 @@ inline val String?.noControlCodes: String
         listOf("Tank", "Archer", "Berserk", "Mage", "Healer").forEach { role ->
             val ign = findIGNForRole(role)
             if (ign != null) {
-                lastKnownRoles[role] = ign
+                DungeonClass[role] = ign
             }
         }
-        modMessage(
-            "Tank: ${lastKnownRoles["Tank"]}, " +
-                    "Archer: ${lastKnownRoles["Archer"]}, " +
-                    "Berserk: ${lastKnownRoles["Berserk"]}, " +
-                    "Mage: ${lastKnownRoles["Mage"]}, " +
-                    "Healer: ${lastKnownRoles["Healer"]}"
-        )
     }
 
     fun findIGNForRole(role: String): String? {
@@ -59,22 +52,16 @@ inline val String?.noControlCodes: String
         }
     }
 
-
-fun myIGN(): String {
-    return Minecraft.getMinecraft().thePlayer.name
 }
 
 fun ownClass(): String? {
-    var clazz = null
-    if (Minecraft.getMinecraft().thePlayer.name == lastKnownRoles["Tank"])
-        return "Tank"
-    else if (Minecraft.getMinecraft().thePlayer.name == lastKnownRoles["Archer"])
-        return "Arch"
-    else if (Minecraft.getMinecraft().thePlayer.name == lastKnownRoles["Berserk"])
-        return "Bers"
-    else if (Minecraft.getMinecraft().thePlayer.name == lastKnownRoles["Mage"])
-        return "Mage"
-    else if (Minecraft.getMinecraft().thePlayer.name == lastKnownRoles["Healer"])
-        return "Healer"
-    else return null
+    return when (myIgn) {
+        DungeonClass["Tank"] -> "Tank"
+        DungeonClass["Archer"] -> "Archer"
+        DungeonClass["Berserk"] -> "Berserk"
+        DungeonClass["Mage"] -> "Mage"
+        DungeonClass["Healer"] -> "Healer"
+        else -> null
+    }
+
 }
