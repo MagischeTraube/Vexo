@@ -34,9 +34,6 @@ object ImidNukeAlert : Module(
 
         if (event.message == "You must be in a party to join the party channel!" && !revived) {
             hud.value.enabled = !hud.value.enabled
-            TickDelayUtils.tickDelay(40){
-                hud.value.enabled = !hud.value.enabled
-            }
         } else if (regex.matches(event.message)) {
             modMessage("triggered")
             revived = true
