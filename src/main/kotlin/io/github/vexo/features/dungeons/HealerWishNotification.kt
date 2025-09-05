@@ -33,7 +33,7 @@ object HealerWishNotification : Module(
     @SubscribeEvent(receiveCanceled = true)
     fun showHud(event: ChatPacketEvent) {
         if (event.message == "⚠ Maxor is enraged! ⚠" && HudTicks == 0) {
-            hud.value.enabled
+            hud.value.enabled = true
             HudTicks = 20
         }
     }

@@ -24,7 +24,7 @@ class Vexo {
     fun init(event: FMLInitializationEvent) {
 
         listOf(
-            EventTrigger, EndOfRun, checkForUpdateOnStartup, PriceUtils, TickDelayUtils
+            EventTrigger, EndOfRun, checkForUpdateOnStartup, PriceUtils
         ).forEach { MinecraftForge.EVENT_BUS.register(it) }
 
 
