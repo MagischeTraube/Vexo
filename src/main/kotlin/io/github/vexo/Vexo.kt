@@ -8,6 +8,7 @@ import io.github.vexo.features.dungeons.*
 import io.github.vexo.events.EventTrigger
 import io.github.vexo.utils.HUD.TestHUD
 import io.github.vexo.utils.skyblock.PriceUtils
+import io.github.vexo.utils.skyblock.TickDelayUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
 import net.minecraftforge.common.MinecraftForge
@@ -24,7 +25,7 @@ class Vexo {
     fun init(event: FMLInitializationEvent) {
 
         listOf(
-            EventTrigger, EndOfRun, checkForUpdateOnStartup, PriceUtils
+            EventTrigger, EndOfRun, checkForUpdateOnStartup, PriceUtils, TickDelayUtils
         ).forEach { MinecraftForge.EVENT_BUS.register(it) }
 
 
@@ -41,7 +42,7 @@ class Vexo {
          */
         val FEATURES = listOf(
             RagAxeNow, ChatCleaner, HideMageSheep, AnnounceClass, ProfitTracker, AutoRejoin, MuteWalkingSounds, PadTimer,
-            SuperboomGrabber, TestHUD
+            SuperboomGrabber, ImidNukeAlert
         )
         ModuleManager.register(FEATURES)
 
