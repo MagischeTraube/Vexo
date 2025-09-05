@@ -8,7 +8,6 @@ import io.github.vexo.features.dungeons.*
 import io.github.vexo.events.EventTrigger
 import io.github.vexo.utils.HUD.TestHUD
 import io.github.vexo.utils.skyblock.PriceUtils
-import io.github.vexo.utils.skyblock.TickDelayUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
 import net.minecraftforge.common.MinecraftForge
