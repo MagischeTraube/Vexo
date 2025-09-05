@@ -11,7 +11,10 @@ inline val String?.noControlCodes: String
 
 
 var tabListEntries: List<String> = emptyList()
-val myIgn = Minecraft.getMinecraft().thePlayer.name
+val myIgn: String by lazy {
+    Minecraft.getMinecraft().thePlayer.name
+}
+
 
 val DungeonClass: MutableMap<String, String?> = mutableMapOf(
     "Tank" to null,

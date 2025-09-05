@@ -42,7 +42,7 @@ class Vexo {
          */
         val FEATURES = listOf(
             RagAxeNow, ChatCleaner, HideMageSheep, AnnounceClass, ProfitTracker, AutoRejoin, MuteWalkingSounds, PadTimer,
-            SuperboomGrabber, ImidNukeAlert
+            SuperboomGrabber, ImidNukeAlert, HealerWishNotification
         )
         ModuleManager.register(FEATURES)
 

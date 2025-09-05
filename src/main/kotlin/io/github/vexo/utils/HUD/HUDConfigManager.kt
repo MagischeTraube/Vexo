@@ -20,7 +20,7 @@ data class HUDPosition(
 object HUDConfigManager {
     private val gson = GsonBuilder().setPrettyPrinting().create()
     private val configFile: File
-        get() = File(Minecraft.getMinecraft().mcDataDir, "config/hud-positions.json")
+        get() = File(Minecraft.getMinecraft().mcDataDir, "config/Vexo/hud-positions.json")
 
     // Load positions from file
     fun loadPositions(): Map<String, HUDPosition> {
@@ -61,7 +61,6 @@ object HUDConfigManager {
             x = hud.value.x,
             y = hud.value.y,
             scale = hud.value.scale,
-            enabled = hud.value.enabled
         )
         savePositions(positions)
     }
