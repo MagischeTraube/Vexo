@@ -3,7 +3,6 @@ package io.github.vexo.features.dungeons
 import io.github.vexo.config.Module
 import io.github.vexo.events.ChatPacketEvent
 import io.github.vexo.utils.HUD.*
-import io.github.vexo.utils.skyblock.TickDelayUtils
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import io.github.vexo.utils.skyblock.modMessage
 import net.minecraft.client.Minecraft
