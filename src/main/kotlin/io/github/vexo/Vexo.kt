@@ -6,7 +6,6 @@ import io.github.vexo.features.QOL.*
 import io.github.vexo.features.chat.*
 import io.github.vexo.features.dungeons.*
 import io.github.vexo.events.EventTrigger
-import io.github.vexo.utils.HUD.TestHUD
 import io.github.vexo.utils.skyblock.PriceUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
