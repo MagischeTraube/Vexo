@@ -31,7 +31,7 @@ class Vexo {
          * Commands
         */
         listOf(
-            Tyfr, VexoCommand, PrintTest, UuidCommand
+            Tyfr, VexoCommand, PrintTest, UuidCommand, M7r
         ).forEach { ClientCommandHandler.instance.registerCommand(it) }
 
 
