@@ -76,7 +76,8 @@ object ChatCleaner : Module(
         Regex("Your active Potion Effects have been paused and stored. They will be restored when you leave Dungeons! You are not allowed to use existing Potion Effects while in Dungeons."),
         Regex("FISHING FESTIVAL The festival is now underway! Break out your fishing rods and watch out for sharks!"),
         Regex("Attempting to add you to the party..."),
-        Regex("Mythological Rituals! A mythological creature spawned!")
+        Regex("Mythological Rituals! A mythological creature spawned!"),
+        Regex("HOPPITY'S HUNT You found a Hitman Egg!")
 
     )
     private val RandomDungeonSpawnRegex = listOf(
