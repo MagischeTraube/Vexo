@@ -1,5 +1,6 @@
 package io.github.vexo.features.dungeons
 
+import io.github.vexo.utils.skyblock.modMessage
 import io.github.vexo.utils.skyblock.partyMessage
 import net.minecraft.command.CommandBase
 import net.minecraft.command.CommandException
@@ -41,6 +42,7 @@ object M7r : CommandBase() {
             "bers" -> partyMessage(BERS)
             "mage" -> partyMessage(MAGE)
             "healer" -> partyMessage(HEAL)
+            else -> modMessage("use tank, arch, bers, mage, healer for classes, or /m7r for all roles")
         }
     }
 
