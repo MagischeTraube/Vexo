@@ -266,7 +266,13 @@ object ProfitTracker : Module(
     private val CroesusMenuGuiTitle = "Croesus"
 
     private val CroesusChestsGuiTitle = listOf(
-        "Master Mode The Catacombs - Flo",
+        "Master Catacombs - Floor I",
+        "Master Catacombs - Floor II",
+        "Master Catacombs - Floor III",
+        "Master Catacombs - Floor IV",
+        "Master Catacombs - Floor V",
+        "Master Catacombs - Floor VI",
+        "Master Catacombs - Floor VII",
         "The Catacombs - Floor I",
         "The Catacombs - Floor II",
         "The Catacombs - Floor III",
