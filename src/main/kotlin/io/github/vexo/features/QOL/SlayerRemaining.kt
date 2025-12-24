@@ -12,19 +12,19 @@ object SlayerRemaining : Module(
     description = "Tells you how many Slayer bosses you need to kill to reach the new level",
     category = "QOL"
 ) {
-    private val XP_PerKill = registerSetting(InputSetting("Slyer EXP pe Kill:", "500", "Einstellen"))
-    private val xp_given = registerSetting(InputSetting("Your curren Remaining xp:", "1000000", "Einstellen"))
+    private val XP_PerKill = registerSetting(InputSetting("Slayer EXP per Kill:", "500", "Einstellen"))
+    private val xp_given = registerSetting(InputSetting("Your current Remaining xp:", "1000000", "Einstellen"))
 
     private var current_xp = xp_given.value.toInt()
-    private var remainin_xp =
+    private var boesses_remaining =
         current_xp / XP_PerKill.value.toInt()
 
 
     @SubscribeEvent(receiveCanceled = true)
     fun onChat(event: ChatPacketEvent) {
-        if (event.message == "SLAYER QUEST COMPLETE!") {
+        if (event.message.removeFormatting() == "SLAYER QUEST COMPLETE!") {
             current_xp = current_xp - XP_PerKill.value.toInt()
-            modMessage(remainin_xp)
+            modMessage("You need " + boesses_remaining + " more bosses to the next level")
         }
     }
 }
