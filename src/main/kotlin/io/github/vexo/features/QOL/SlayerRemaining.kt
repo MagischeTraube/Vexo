@@ -22,7 +22,7 @@ object SlayerRemaining : Module(
 
     @SubscribeEvent(receiveCanceled = true)
     fun onChat(event: ChatPacketEvent) {
-        if (event.message.removeFormatting() == "SLAYER QUEST COMPLETE!") {
+        if (event.message.removeFormatting() == "  SLAYER QUEST COMPLETE!") {
             current_xp = current_xp - XP_PerKill.value.toInt()
             modMessage("You need " + boesses_remaining + " more bosses to the next level")
         }
