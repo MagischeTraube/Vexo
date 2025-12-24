@@ -7,21 +7,23 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
 
 
-object AutoRejoin : Module(
+object SlayerRemaining : Module(
     name = "Slayer Bosses Remaiing",
     description = "Tells you how many Slayer bosses you need to kill to reach the new level",
     category = "QOL"
 ) {
     private val XP_PerKill = registerSetting(InputSetting("Slyer EXP pe Kill:", "500", "Einstellen"))
-    private val current_xp = registerSetting(InputSetting("Your curren Remaining xp:", "1000000", "Einstellen"))
+    private val xp_given = registerSetting(InputSetting("Your curren Remaining xp:", "1000000", "Einstellen"))
 
+    private var current_xp = xp_given.value.toInt()
     private var remainin_xp =
-        current_xp.value.toInt() / XP_PerKill.value.toInt()
+        current_xp / XP_PerKill.value.toInt()
 
 
-    @SubscribeEvent
+    @SubscribeEvent(receiveCanceled = true)
     fun onChat(event: ChatPacketEvent) {
-        if (event.message == "  SLAYER QUEST COMPLETE!") {
+        if (event.message == "SLAYER QUEST COMPLETE!") {
+            current_xp = current_xp - XP_PerKill.value.toInt()
             modMessage(remainin_xp)
         }
     }
